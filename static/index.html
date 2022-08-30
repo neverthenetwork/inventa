@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+
+<html>
+
+	<head>
+		<title>Graph-O-Matic</title>
+
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.5.2/bluebird.min.js"></script>
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+		<script src="https://unpkg.com/weaverjs@1.2.0/dist/weaver.min.js"></script>
+
+		<!-- for testing with local version of cytoscape.js -->
+		<!-- <script src="../cytoscape.js/build/cytoscape.js"></script> -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.22.1/cytoscape.min.js"></script>
+
+		<script src="https://unpkg.com/layout-base@1.0.2/layout-base.js"></script>
+		<script src="https://unpkg.com/avsdf-base/avsdf-base.js"></script>
+		<script src="https://unpkg.com/cose-base@1.0.3/cose-base.js"></script>
+		<script src="https://unpkg.com/cytoscape-graphml/cytoscape-graphml.js"></script>
+		<script src="https://raw.githack.com/iVis-at-Bilkent/cytoscape.js-layvo/unstable/cytoscape-layvo.js"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/cytoscape-cise@1.0.0/cytoscape-cise.js"></script>
+
+		<link href="/resources/style.css" rel="stylesheet" />
+
+		<script>
+			function renderGraph(document, include_patterns) {
+				container = document.getElementById('cy');
+				if (typeof(include_patterns)==='undefined') include_patterns = "";
+				include_patterns_list = include_patterns.split("\n");
+
+				function filter_patterns(name) {
+					var found = false;
+					include_patterns_list.forEach(function(item) {
+						if(name.indexOf(item) !== -1) {
+							found = true;
+							return found;
+						}
+					});
+					return found;
+				}
+
+				function removeOptions(selectElement) {
+					var i, L = selectElement.options.length - 1;
+					for(i = L; i >= 0; i--) {
+						selectElement.remove(i);
+					}
+				}
+
+				var cy = window.cy = cytoscape({
+					container: container,
+
+					layout: {
+						name: 'cise',
+						clusters: function(node) { return node.data().cluster; },
+						nodeSeparation: 50,
+						allowNodesInCircle: true,
+						idealInterClusterEdgeLengthCoefficient: 4.5,
+					},
+
+					style: [
+						{
+							selector: 'node',
+							style: {
+								"label": "data(label)",
+								'font-size': 12,
+								'background-color': '#ea8a31',
+							        "text-halign": "center",
+							        "text-valign": "bottom",
+							        "padding": 20,
+							}
+						},
+
+						{
+							selector: 'edge',
+							style: {
+								'font-size': 6,
+								'curve-style': 'bezier',
+								'control-point-step-size': 10,
+								'target-arrow-shape': 'triangle',
+								'target-arrow-color': '#fcc694',
+								'width': 2,
+								'opacity': 0.666,
+								'line-color': '#fcc694'
+							}
+						}
+					],
+					elements: fetch('/elementdata.json?src=' + document.getElementById("src_select").value + '&dst=' + document.getElementById("dst_select").value).then(function( res ){ 
+						return res.json().then(function(data) {
+							var src_select = document.getElementById("src_select"); 
+							var dst_select = document.getElementById("dst_select");
+
+							// save current selection
+							var src_value = src_select.value;
+							var dst_value = dst_select.value;
+
+							removeOptions(src_select);
+							removeOptions(dst_select);
+
+							var el = document.createElement("option");
+							el.text = "None";
+							el.value = "";
+							src_select.add(el);
+
+							var el_d = document.createElement("option");
+							el_d.text = "None";
+							el_d.value = "";
+							dst_select.add(el_d);
+
+							for(var i = 0; i < data.nodes.length; i++) {
+								var opt = data.nodes[i].data.label;
+
+								var el = document.createElement("option");
+								el.text = opt;
+								el.value = opt;
+								src_select.add(el);
+
+								var d_el = document.createElement("option");
+								d_el.text = opt;
+								d_el.value = opt;
+								dst_select.add(d_el);
+							}
+
+							src_select.value = src_value;
+							dst_select.value = dst_value;
+
+							var return_data = {
+								'nodes': data.nodes.filter(function(node) {
+									if (node.data.show == undefined) {
+										return true;
+									} else {
+										return node.data.show; 
+									}
+								}),
+								'edges': data.edges.filter(function(edge) {
+									return edge.data.show; 
+								}),
+							};
+							return return_data;
+						});
+					}),
+				});
+			};
+			window.addEventListener('DOMContentLoaded', function() {
+				renderGraph(document);
+			});
+		</script>
+	</head>
+
+	<body>
+		<h1>Graph-O-Matic</h1>
+
+		<div class="flex-container">
+			<div class="menu" id="details">
+				<textarea id="include_patterns" rows=5 cols=25></textarea>
+				<button type="button" onclick="renderGraph(document, getElementById('include_patterns').value)">Update</button>
+				<select id="src_select">
+					<option value="">None</option>
+				</select>
+				<select id="dst_select">
+					<option value="">None</option>
+				</select>
+			</div>
+
+			<div class="cy" id="cy"></div>
+		</div>
+
+	</body>
+
+</html>
