@@ -17,9 +17,9 @@ type Conf struct {
 	PeerIPv4Address       string   `yaml:"peer_ipv4_address"`
 	PeerASN               int      `yaml:"peer_asn"`
 	HTTPListenPort        int      `yaml:"http_listen_port"`
-	NodeNameStripPatterns []string `yaml:"node_name_strip_patterns"`
-	GroupSplitChar        string   `yaml:"group_split_char"`
-	GroupSplitIndex       int      `yaml:"group_split_index"`
+	NodeNameStripPatterns []string `yaml:"node_name_strip_patterns" default:"[]"`
+	GroupSplitChar        string   `yaml:"group_split_char" default:""`
+	GroupSplitIndex       int      `yaml:"group_split_index" default:"0"`
 }
 
 // Configs is our shared config object
