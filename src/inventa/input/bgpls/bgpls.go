@@ -3,7 +3,6 @@ package bgpls
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -167,7 +166,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 						}
 					}
 				}); err != nil {
-				log.Fatal(err)
+				utils.Log.Fatal(err)
 			}
 			datastore.Elements = cy.Elements{
 				Nodes: make([]cy.Node, 0),
