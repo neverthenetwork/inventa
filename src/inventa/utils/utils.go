@@ -18,8 +18,8 @@ type Conf struct {
 	PeerASN               int      `yaml:"peer_asn"`
 	HTTPListenPort        int      `yaml:"http_listen_port"`
 	NodeNameStripPatterns []string `yaml:"node_name_strip_patterns"`
-	GroupSplitChar        string   `yaml:"group_split_char"`
-	GroupSplitIndex       int      `yaml:"group_split_index"`
+	GroupSplitChar        string   `yaml:"group_split_char" default:""`
+	GroupSplitIndex       int      `yaml:"group_split_index" default:"0"`
 }
 
 // Configs is our shared config object
