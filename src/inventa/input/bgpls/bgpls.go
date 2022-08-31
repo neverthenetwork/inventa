@@ -175,10 +175,15 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 			}
 			nodeGroups := []string{}
 			for _, val := range newNodeMap {
-				nodeParts := strings.Split(val.nodeName, utils.Configs.GroupSplitChar)
-				nodeGroup := nodeParts[utils.Configs.GroupSplitIndex]
-				if _, found := utils.FindInArray(nodeGroup, nodeGroups); !found {
-					nodeGroups = append(nodeGroups, nodeGroup)
+				nodeGroup := "noGroup"
+				if utils.Configs.GroupSplitChar != "" {
+					nodeParts := strings.Split(val.nodeName, utils.Configs.GroupSplitChar)
+					nodeGroup := nodeParts[utils.Configs.GroupSplitIndex]
+					if _, found := utils.FindInArray(nodeGroup, nodeGroups); !found {
+						nodeGroups = append(nodeGroups, nodeGroup)
+					}
+				} else {
+					nodeGroups = []string{"NoGroup"}
 				}
 				nodeGroupIndex, _ := utils.FindInArray(nodeGroup, nodeGroups)
 				node := cy.Node{

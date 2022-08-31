@@ -1,0 +1,21 @@
+---
+
+run_time_mode: "bgp" # use "local" to read a local json file
+local_json_file: "" # used with "local" above to not use BGP
+local_router_id: "1.1.1.1"
+local_asn: 65533
+peer_ipv4_address: "1.1.1.2"
+peer_asn: 65533 # Same as above, it's iBGP
+http_listen_port: 8081
+
+node_name_strip_patterns: # If you want to strip parts from names you can.
+  - "re0."
+
+# The visualiser uses groups for nodes 
+# This will split the node name on a character
+# and return the array index for the group name
+#
+# Example: "router.london.company.net" becomes
+# Group: "london" with the following config.
+#group_split_char: "."
+#group_split_index: 1
