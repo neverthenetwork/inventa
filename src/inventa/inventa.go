@@ -9,6 +9,7 @@ import (
 
 	"github.com/shelson/inventa/src/inventa/datastore"
 	"github.com/shelson/inventa/src/inventa/input/bgpls"
+	"github.com/shelson/inventa/src/inventa/logging"
 	"github.com/shelson/inventa/src/inventa/utils"
 	"github.com/shelson/inventa/src/inventa/web"
 
@@ -28,12 +29,12 @@ func main() {
 
 	utils.InitConfig()
 
-	utils.SetUpLogger()
+	logging.SetUpLogger()
 
-	s := server.NewBgpServer(server.LoggerOption(&utils.MyLogger{Logger: utils.Log}))
+	s := server.NewBgpServer(server.LoggerOption(&logging.MyLogger{Logger: logging.Log}))
 
 	if utils.Configs.RunTimeMode != "local" {
-		utils.Log.Info("Starting BGP")
+		logging.Log.Info("Starting BGP")
 		go s.Serve()
 
 		if err := s.StartBgp(context.Background(), &api.StartBgpRequest{
@@ -43,13 +44,13 @@ func main() {
 				ListenPort: -1, // gobgp won't listen on tcp:179
 			},
 		}); err != nil {
-			utils.Log.Fatal(err)
+			logging.Log.Fatal(err)
 		}
 	} else {
 		if err := loadJSON(utils.Configs.LocalJSONFile); err != nil {
-			utils.Log.Fatal(err)
+			logging.Log.Fatal(err)
 		} else {
-			utils.Log.Info(fmt.Sprintf("Read static file: %d Nodes loaded\n", len(datastore.Elements.Nodes)))
+			logging.Log.Info(fmt.Sprintf("Read static file: %d Nodes loaded\n", len(datastore.Elements.Nodes)))
 		}
 	}
 	count := 0
@@ -66,13 +67,13 @@ func main() {
 		bgpls.ProcessBGPUpdates(r, count, s)
 		count++
 	}); err != nil {
-		utils.Log.Fatal(err)
+		logging.Log.Fatal(err)
 	}
 
 	if err := s.AddPeer(context.Background(), &api.AddPeerRequest{
 		Peer: bgpls.MakePeerConfiguration(utils.Configs.PeerIPv4Address, utils.Configs.PeerASN),
 	}); err != nil {
-		utils.Log.Fatal(err)
+		logging.Log.Fatal(err)
 	}
 
 	fileServer := http.FileServer(http.Dir("../../static"))
@@ -80,7 +81,7 @@ func main() {
 	http.HandleFunc("/", web.IndexHandler)
 	http.HandleFunc("/elementdata.json", web.JsHandler)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
-		utils.Log.Fatal(err)
+		logging.Log.Fatal(err)
 	}
 
 	select {}

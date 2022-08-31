@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/shelson/inventa/src/inventa/datastore"
+	"github.com/shelson/inventa/src/inventa/logging"
 	"github.com/shelson/inventa/src/inventa/utils"
 
 	api "github.com/osrg/gobgp/v3/api"
@@ -77,7 +78,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 	}
 
 	if p := r.GetPeer(); p != nil && p.Type == api.WatchEventResponse_PeerEvent_STATE {
-		utils.Log.Info(p)
+		logging.Log.Info(p)
 	} else if t := r.GetTable(); t != nil {
 		newNodeMap := map[string]nodeNLRI{}
 		newReachMap := map[string]prefixNLRI{}
@@ -162,11 +163,11 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 						}
 						if nlriType == "unknown" {
 							pathdump, _ := marshaller.Marshal(p.Nlri)
-							utils.Log.Info(string(pathdump))
+							logging.Log.Info(string(pathdump))
 						}
 					}
 				}); err != nil {
-				utils.Log.Fatal(err)
+				logging.Log.Fatal(err)
 			}
 			datastore.Elements = cy.Elements{
 				Nodes: make([]cy.Node, 0),
