@@ -6,6 +6,7 @@ It has the ability to show the entire topology, and also calculate/display visua
 
 ## To use
 Copy src/inventa/config.yaml.example to config.yaml somewhere and edit
+
 ```
 cd src/inventa/
 go run . -c /path/to/config.yaml
