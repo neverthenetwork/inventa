@@ -1,7 +1,5 @@
 ---
 
-run_time_mode: "bgp" # use "local" to read a local json file
-local_json_file: "" # used with "local" above to not use BGP
 local_router_id: "1.1.1.1"
 local_asn: 65533
 peer_ipv4_address: "1.1.1.2"
