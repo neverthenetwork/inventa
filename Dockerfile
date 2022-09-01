@@ -14,4 +14,4 @@ COPY . .
 RUN go build -v -o /usr/local/bin/ ./...
 
 USER 1000:1000
-CMD ["/usr/local/bin/inventa -c /etc/inventa/config.yaml"]
+CMD ["/usr/local/bin/inventa", "-c", "/etc/inventa/config.yaml"]
