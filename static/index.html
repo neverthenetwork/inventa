@@ -110,8 +110,14 @@
 							el_d.value = "";
 							dst_select.add(el_d);
 
+							var node_list = [];
 							for(var i = 0; i < data.nodes.length; i++) {
-								var opt = data.nodes[i].data.label;
+				       				node_list.push(data.nodes[i].data.label);
+							}
+							node_list.sort();
+
+							for(var i = 0; i < node_list.length; i++) {
+								var opt = node_list[i];
 
 								var el = document.createElement("option");
 								el.text = opt;
