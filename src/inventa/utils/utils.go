@@ -10,7 +10,6 @@ import (
 
 // Conf holds configuration information
 type Conf struct {
-	RunTimeMode           string   `yaml:"run_time_mode"`
 	LocalJSONFile         string   `yaml:"local_json_file"`
 	LocalRouterID         string   `yaml:"local_router_id"`
 	LocalASN              int      `yaml:"local_asn"`
@@ -36,8 +35,8 @@ func FindInArray(what string, where []string) (idx int, found bool) {
 }
 
 // InitConfig initializes the configuration object
-func InitConfig() {
-	yamlFile, err := os.ReadFile("config.yaml")
+func InitConfig(fileName string) {
+	yamlFile, err := os.ReadFile(fileName)
 	if err != nil {
 		logging.Log.Fatal(err)
 	}

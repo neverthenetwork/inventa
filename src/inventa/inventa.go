@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -27,13 +28,23 @@ func loadJSON(fileName string) error {
 
 func main() {
 
-	utils.InitConfig()
+	var configPath string
+	var runMode string
 
+	// Logging first
 	logging.SetUpLogger()
+
+	// flags declaration using flag package
+	flag.StringVar(&configPath, "c", "/etc/inventa.yaml", "Specify location of config file, default is /etc/inventa.yaml")
+	flag.StringVar(&runMode, "r", "bgp", "Specify run mode, use 'local' to load from local file")
+
+	flag.Parse()
+
+	utils.InitConfig(configPath)
 
 	s := server.NewBgpServer(server.LoggerOption(&logging.MyLogger{Logger: logging.Log}))
 
-	if utils.Configs.RunTimeMode != "local" {
+	if runMode != "local" {
 		logging.Log.Info("Starting BGP")
 		go s.Serve()
 
