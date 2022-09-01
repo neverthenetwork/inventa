@@ -207,7 +207,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 						Target: newNodeMap[link.remoteRouterID].nodeName,
 						Attributes: map[string]interface{}{
 							"adjacency_sid": strconv.FormatInt(int64(link.srAdjacencySid), 10),
-							"igpMetric":     strconv.FormatInt(int64(link.igpMetric), 10),
+							"igp_metric":    strconv.FormatInt(int64(link.igpMetric), 10),
 						},
 					},
 					Selectable: true,

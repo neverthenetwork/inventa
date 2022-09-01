@@ -1,6 +1,8 @@
 package spf
 
 import (
+	"strconv"
+
 	"github.com/RyanCarrier/dijkstra"
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
@@ -28,7 +30,8 @@ func makeDijkstra(elements cy.Elements) (*dijkstra.Graph, error) {
 	}
 
 	for _, v := range elements.Edges {
-		if err := graph.AddMappedArc(v.Data.Source, v.Data.Target, 10); err != nil {
+		metricInt, _ := strconv.ParseInt(v.Data.Attributes["igp_metric"].(string), 10, 64)
+		if err := graph.AddMappedArc(v.Data.Source, v.Data.Target, metricInt); err != nil {
 			return nil, err
 		} // TODO add metric
 	}
