@@ -9,9 +9,9 @@ linters:
   enable:
     - errcheck
     - goimports
-    - golint
     - govet
     - staticcheck
+    - revive
 
 issues:
   exclude-use-default: false
