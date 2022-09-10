@@ -100,8 +100,8 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 						var localIPv4Addr string
 						var neighborIPv4Addr string
 						var prefixesReachable []string
-						var srAdjacencySid uint32 = 0
-						var srPrefixSid uint32 = 0
+						var srAdjacencySid uint32
+						var srPrefixSid uint32
 
 						m, _ := (p.Nlri).UnmarshalNew()
 						switch m := m.(type) {
