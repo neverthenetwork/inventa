@@ -90,7 +90,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 			if err := s.ListPath(context.Background(),
 				&api.ListPathRequest{TableType: api.TableType_LOCAL, Family: family}, func(d *api.Destination) {
 					for _, p := range d.Paths {
-						var nlriType string = "unknown"
+						var nlriType = "unknown"
 						var nodeName string
 						var nodelocalRouterID string
 						var igpRouterID string
