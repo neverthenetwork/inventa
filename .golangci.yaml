@@ -15,4 +15,4 @@ linters:
     - revive
 
 issues:
-  exclude-use-default: false
+  exclude-use-default: true
