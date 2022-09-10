@@ -91,14 +91,14 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 				&api.ListPathRequest{TableType: api.TableType_LOCAL, Family: family}, func(d *api.Destination) {
 					for _, p := range d.Paths {
 						var nlriType string = "unknown"
-						var nodeName string = ""
-						var nodelocalRouterID string = ""
-						var igpRouterID string = ""
-						var igpMetric uint32 = 0
-						var localRouterID string = ""
-						var remoteRouterID string = ""
-						var localIPv4Addr string = ""
-						var neighborIPv4Addr string = ""
+						var nodeName string
+						var nodelocalRouterID string
+						var igpRouterID string
+						var igpMetric uint32
+						var localRouterID string
+						var remoteRouterID string
+						var localIPv4Addr string
+						var neighborIPv4Addr string
 						var prefixesReachable []string
 						var srAdjacencySid uint32 = 0
 						var srPrefixSid uint32 = 0
