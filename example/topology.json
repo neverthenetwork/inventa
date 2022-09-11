@@ -109,6 +109,15 @@
                 "adjacency_sid": "122"
             },
         "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge8",
+                "source": "router3",
+                "target": "router4",
+                "adjacency_sid": "222"
+            },
+        "selectable": true
         }
     ]
 }
