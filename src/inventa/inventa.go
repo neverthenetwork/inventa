@@ -65,32 +65,35 @@ func main() {
 		}
 	}
 	count := 0
-	// the change of the peer state and path
-	if err := s.WatchEvent(context.Background(), &api.WatchEventRequest{
-		Peer: &api.WatchEventRequest_Peer{},
-		Table: &api.WatchEventRequest_Table{
-			Filters: []*api.WatchEventRequest_Table_Filter{
-				{
-					Type: api.WatchEventRequest_Table_Filter_BEST,
+	if runMode != "local" {
+		// the change of the peer state and path
+		if err := s.WatchEvent(context.Background(), &api.WatchEventRequest{
+			Peer: &api.WatchEventRequest_Peer{},
+			Table: &api.WatchEventRequest_Table{
+				Filters: []*api.WatchEventRequest_Table_Filter{
+					{
+						Type: api.WatchEventRequest_Table_Filter_BEST,
+					},
 				},
-			},
-		}}, func(r *api.WatchEventResponse) {
-		bgpls.ProcessBGPUpdates(r, count, s)
-		count++
-	}); err != nil {
-		logging.Log.Fatal(err)
-	}
+			}}, func(r *api.WatchEventResponse) {
+			bgpls.ProcessBGPUpdates(r, count, s)
+			count++
+		}); err != nil {
+			logging.Log.Fatal(err)
+		}
 
-	if err := s.AddPeer(context.Background(), &api.AddPeerRequest{
-		Peer: bgpls.MakePeerConfiguration(utils.Configs.PeerIPv4Address, utils.Configs.PeerASN),
-	}); err != nil {
-		logging.Log.Fatal(err)
+		if err := s.AddPeer(context.Background(), &api.AddPeerRequest{
+			Peer: bgpls.MakePeerConfiguration(utils.Configs.PeerIPv4Address, utils.Configs.PeerASN),
+		}); err != nil {
+			logging.Log.Fatal(err)
+		}
 	}
 
 	fileServer := http.FileServer(http.Dir("../../static"))
 	http.Handle("/resources/", http.StripPrefix("/resources", fileServer))
 	http.HandleFunc("/", web.IndexHandler)
 	http.HandleFunc("/elementdata.json", web.JsHandler)
+	logging.Log.Info(fmt.Sprintf("Starting web server on port %d", utils.Configs.HTTPListenPort))
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
 		logging.Log.Fatal(err)
 	}
