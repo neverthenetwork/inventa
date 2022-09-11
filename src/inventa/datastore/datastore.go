@@ -17,5 +17,15 @@ func (elements *myElements) getName(nodeID string) string {
 	return ""
 }
 
+// FindNode checks whether a node exists in the list of nodes
+func FindNode(what string, where []cy.Node) (idx int, found bool) {
+	for i, v := range where {
+		if v.Data.ID == what {
+			return i, true
+		}
+	}
+	return 0, false
+}
+
 // Elements holds all our graph nodes/verteces
 var Elements cy.Elements

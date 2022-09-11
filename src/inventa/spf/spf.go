@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/RyanCarrier/dijkstra"
-	"github.com/shelson/inventa/src/inventa/logging"
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
@@ -27,7 +26,7 @@ type BestPaths struct {
 func makeDijkstra(elements cy.Elements) (*dijkstra.Graph, error) {
 	graph := dijkstra.NewGraph()
 	for _, n := range elements.Nodes {
-		logging.Log.Info("Adding node: " + n.Data.ID)
+		// logging.Log.Info("Adding node: " + n.Data.ID)
 		graph.AddMappedVertex(n.Data.ID)
 	}
 
@@ -40,7 +39,7 @@ func makeDijkstra(elements cy.Elements) (*dijkstra.Graph, error) {
 			metric, _ := strconv.ParseInt(metricString.(string), 10, 64)
 			metricInt = metric
 		}
-		logging.Log.Info("Adding edge: " + v.Data.Source + " -> " + v.Data.Target + " (" + strconv.FormatInt(metricInt, 10) + ")")
+		// logging.Log.Info("Adding edge: " + v.Data.Source + " -> " + v.Data.Target + " (" + strconv.FormatInt(metricInt, 10) + ")")
 		if err := graph.AddMappedArc(v.Data.Source, v.Data.Target, metricInt); err != nil {
 			return nil, err
 		} // TODO add metric
@@ -56,16 +55,6 @@ func makeNameList(graph *dijkstra.Graph, paths dijkstra.BestPath) []string {
 		names = append(names, name)
 	}
 	return names
-}
-
-// FindNode checks whether a node exists in the list of nodes
-func FindNode(what string, where []cy.Node) (idx int, found bool) {
-	for i, v := range where {
-		if v.Data.ID == what {
-			return i, true
-		}
-	}
-	return 0, false
 }
 
 // GetBestPathNames finds the shortest path(s) from src to dst, converting them to names
