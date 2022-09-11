@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/RyanCarrier/dijkstra"
+	"github.com/shelson/inventa/src/inventa/logging"
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
@@ -26,11 +27,20 @@ type BestPaths struct {
 func makeDijkstra(elements cy.Elements) (*dijkstra.Graph, error) {
 	graph := dijkstra.NewGraph()
 	for _, n := range elements.Nodes {
+		logging.Log.Info("Adding node: " + n.Data.ID)
 		graph.AddMappedVertex(n.Data.ID)
 	}
 
 	for _, v := range elements.Edges {
-		metricInt, _ := strconv.ParseInt(v.Data.Attributes["igp_metric"].(string), 10, 64)
+		var metricInt int64
+		metricString, ok := v.Data.Attributes["igp_metric"]
+		if !ok {
+			metricInt = 10 // default metric
+		} else {
+			metric, _ := strconv.ParseInt(metricString.(string), 10, 64)
+			metricInt = metric
+		}
+		logging.Log.Info("Adding edge: " + v.Data.Source + " -> " + v.Data.Target + " (" + strconv.FormatInt(metricInt, 10) + ")")
 		if err := graph.AddMappedArc(v.Data.Source, v.Data.Target, metricInt); err != nil {
 			return nil, err
 		} // TODO add metric

@@ -1,0 +1,123 @@
+    {
+        "nodes": [
+        {
+            "data": {
+                "id": "router1",
+                "label": "router1",
+                "group": "1",
+                "cluster": "1"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "router2",
+                "label": "router2",
+                "group": "1",
+                "cluster": "1"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "router3",
+                "label": "router3",
+                "group": "2",
+                "cluster": "2"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "router4",
+                "label": "router4",
+                "group": "2",
+                "cluster": "2"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "router5",
+                "label": "router5",
+                "group": "3",
+                "cluster": "3"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "router6",
+                "label": "router6",
+                "group": "3",
+                "cluster": "3"
+            },
+        "selectable": true
+        }
+    ],
+    "edges":[
+        {
+            "data": {
+                "id": "edge2",
+                "source": "router1",
+                "target": "router3",
+                "adjacency_sid": "123124"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge3",
+                "source": "router2",
+                "target": "router3",
+                "adjacency_sid": "123125"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge4",
+                "source": "router1",
+                "target": "router4",
+                "adjacency_sid": "123112"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge5",
+                "source": "router4",
+                "target": "router5",
+                "adjacency_sid": "12312"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge6",
+                "source": "router2",
+                "target": "router6",
+                "adjacency_sid": "123"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge7",
+                "source": "router5",
+                "target": "router6",
+                "adjacency_sid": "122"
+            },
+        "selectable": true
+        },
+        {
+            "data": {
+                "id": "edge8",
+                "source": "router3",
+                "target": "router4",
+                "adjacency_sid": "222"
+            },
+        "selectable": true
+        }
+    ]
+}
