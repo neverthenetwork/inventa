@@ -1,5 +1,6 @@
 # Config.yaml files so we don't commit test stuff
 config.yaml
+cert/
 
 # Binaries for programs and plugins
 *.exe
