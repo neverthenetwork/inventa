@@ -9,6 +9,25 @@
     <div id="3d-graph"></div>
   
     <script>
+    function randomInteger(max) {
+        return Math.floor(Math.random()*(max + 1));
+    }
+
+    function RGBtoHEX(color) {
+        return "#" + color.map((digit) => {
+            return digit
+                .toString(16)
+                .padStart(2, '0')
+        }).join('');
+    };
+
+    function randomRgbColor() {
+        let r = randomInteger(255);
+        let g = randomInteger(255);
+        let b = randomInteger(255);
+        console.log([r, g, b]);
+        return RGBtoHEX([r,g,b]);
+    }
     fetch("/elementdata.json").then(function( res ){ 
         return res.json().then(function(data) {
             var graphData = {
@@ -31,6 +50,13 @@
                 (document.getElementById('3d-graph'))
                     .graphData(graphData)
                     .nodeLabel('label')
+                    .linkWidth(2)
+                    .linkCurvature(0.3)
+                    .linkDirectionalParticles(5)
+                    .linkDirectionalParticleWidth(1.5)
+                    .linkDirectionalParticleColor(function(link) {
+                        return randomRgbColor();
+                    })
                     .nodeAutoColorBy('group');
         });
     });
