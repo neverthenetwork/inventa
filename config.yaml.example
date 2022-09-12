@@ -5,6 +5,9 @@ local_asn: 65533
 peer_ipv4_address: "1.1.1.2"
 peer_asn: 65533 # Same as above, it's iBGP
 http_listen_port: 8081
+#https_enable: true # needed for VR
+https_cert_file: "/path/to/cert.pem"
+https_key_file: "/path/to/key.pem"
 
 node_name_strip_patterns: # If you want to strip parts from names you can.
   - "re0."

@@ -4,10 +4,17 @@ Inventa is a visualiser/path computer for network topology data. Currently it's 
 
 It has the ability to show the entire topology, and also calculate/display visually shortest/best path(s) between source and destination nodes.
 
+You can view the topology in the following ways:
+http(s)://site:port/ - gets you a flat 2D render
+http(s)://site:port/3d - gets you a force-directed 3D render
+http(s)://site:port/vr - gets you a force-directed 3D render that's VR enabled
+
 It uses the following projects:
 https://github.com/osrg/gobgp - For the BGP-LS libraries
 https://github.com/cytoscape/cytoscape.js/ - For the WebUI Visualisation
 https://github.com/RyanCarrier/dijkstra - For the Dijkstra SPF calculations
+https://github.com/vasturiano/3d-force-graph-vr - For the amazing 3D/VR support
+
 
 ## To use
 

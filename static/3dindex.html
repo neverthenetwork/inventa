@@ -1,0 +1,38 @@
+<head>
+    <style> body { margin: 0; } </style>
+  
+    <script src="//unpkg.com/3d-force-graph"></script>
+    <!--<script src="../../dist/3d-force-graph.js"></script>-->
+  </head>
+  
+  <body>
+    <div id="3d-graph"></div>
+  
+    <script>
+    fetch("/elementdata.json").then(function( res ){ 
+        return res.json().then(function(data) {
+            var graphData = {
+                'nodes': data.nodes.filter(function(node) {
+                    if (node.data.show == undefined) {
+                        return true;
+                    } else {
+                        return node.data.show; 
+                    }
+                    }).map(function(node) {
+                        return node.data;
+                    }),
+                'links': data.edges.filter(function(edge) {
+                    return edge.data.show; 
+                }).map(function(edge) {
+                        return edge.data;
+                    }),
+            };
+            const Graph = ForceGraph3D()
+                (document.getElementById('3d-graph'))
+                    .graphData(graphData)
+                    .nodeLabel('label')
+                    .nodeAutoColorBy('group');
+        });
+    });
+    </script>
+  </body>

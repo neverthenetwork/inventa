@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/shelson/inventa/src/inventa/datastore"
-	"github.com/shelson/inventa/src/inventa/logging"
-	"github.com/shelson/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/src/inventa/datastore"
+	"github.com/neverthenetwork/inventa/src/inventa/logging"
+	"github.com/neverthenetwork/inventa/src/inventa/utils"
 
 	api "github.com/osrg/gobgp/v3/api"
 	"github.com/osrg/gobgp/v3/pkg/server"

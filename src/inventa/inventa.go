@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/shelson/inventa/src/inventa/datastore"
-	"github.com/shelson/inventa/src/inventa/input/bgpls"
-	"github.com/shelson/inventa/src/inventa/logging"
-	"github.com/shelson/inventa/src/inventa/utils"
-	"github.com/shelson/inventa/src/inventa/web"
+	"github.com/neverthenetwork/inventa/src/inventa/datastore"
+	"github.com/neverthenetwork/inventa/src/inventa/input/bgpls"
+	"github.com/neverthenetwork/inventa/src/inventa/logging"
+	"github.com/neverthenetwork/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/src/inventa/web"
 
 	api "github.com/osrg/gobgp/v3/api"
 	"github.com/osrg/gobgp/v3/pkg/server"
@@ -92,10 +92,18 @@ func main() {
 	fileServer := http.FileServer(http.Dir("../../static"))
 	http.Handle("/resources/", http.StripPrefix("/resources", fileServer))
 	http.HandleFunc("/", web.IndexHandler)
+	http.HandleFunc("/vr", web.VRIndexHandler)
+	http.HandleFunc("/3d", web.ThreeDIndexHandler)
 	http.HandleFunc("/elementdata.json", web.JsHandler)
 	logging.Log.Info(fmt.Sprintf("Starting web server on port %d", utils.Configs.HTTPListenPort))
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
-		logging.Log.Fatal(err)
+	if utils.Configs.HTTPSEnable {
+		if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), "../../cert/certificate.pem", "../../cert/key.pem", nil); err != nil {
+			logging.Log.Fatal(err)
+		}
+	} else {
+		if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
+			logging.Log.Fatal(err)
+		}
 	}
 
 	select {}

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/shelson/inventa/src/inventa/datastore"
-	"github.com/shelson/inventa/src/inventa/spf"
-	"github.com/shelson/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/src/inventa/datastore"
+	"github.com/neverthenetwork/inventa/src/inventa/spf"
+	"github.com/neverthenetwork/inventa/src/inventa/utils"
 
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
@@ -16,6 +16,20 @@ import (
 // IndexHandler is the handler for the index page
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	content, _ := os.ReadFile("../../static/index.html")
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, "%s", string(content))
+}
+
+// VRIndexHandler is the handler for the VR index page
+func VRIndexHandler(w http.ResponseWriter, r *http.Request) {
+	content, _ := os.ReadFile("../../static/vrindex.html")
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, "%s", string(content))
+}
+
+// ThreeDIndexHandler is the handler for the VR index page
+func ThreeDIndexHandler(w http.ResponseWriter, r *http.Request) {
+	content, _ := os.ReadFile("../../static/3dindex.html")
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, "%s", string(content))
 }

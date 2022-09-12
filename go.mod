@@ -1,12 +1,12 @@
-module github.com/shelson/inventa
+module github.com/neverthenetwork/inventa
 
 go 1.19
 
 require (
 	github.com/RyanCarrier/dijkstra v1.1.0
-	github.com/osrg/gobgp/v3 v3.5.0
+	github.com/osrg/gobgp/v3 v3.6.0
 	github.com/sirupsen/logrus v1.9.0
-	gonum.org/v1/gonum v0.11.0
+	gonum.org/v1/gonum v0.12.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v2 v2.4.0
 )
