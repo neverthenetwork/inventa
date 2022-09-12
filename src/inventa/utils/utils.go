@@ -4,7 +4,7 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/shelson/inventa/src/inventa/logging"
+	"github.com/neverthenetwork/inventa/src/inventa/logging"
 	"gopkg.in/yaml.v2"
 )
 

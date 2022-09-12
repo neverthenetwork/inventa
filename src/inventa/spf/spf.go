@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/RyanCarrier/dijkstra"
-	"github.com/shelson/inventa/src/inventa/logging"
+	"github.com/neverthenetwork/inventa/src/inventa/logging"
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 

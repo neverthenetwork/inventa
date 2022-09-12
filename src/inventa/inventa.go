@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/shelson/inventa/src/inventa/datastore"
-	"github.com/shelson/inventa/src/inventa/input/bgpls"
-	"github.com/shelson/inventa/src/inventa/logging"
-	"github.com/shelson/inventa/src/inventa/utils"
-	"github.com/shelson/inventa/src/inventa/web"
+	"github.com/neverthenetwork/inventa/src/inventa/datastore"
+	"github.com/neverthenetwork/inventa/src/inventa/input/bgpls"
+	"github.com/neverthenetwork/inventa/src/inventa/logging"
+	"github.com/neverthenetwork/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/src/inventa/web"
 
 	api "github.com/osrg/gobgp/v3/api"
 	"github.com/osrg/gobgp/v3/pkg/server"

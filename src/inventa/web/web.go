@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/shelson/inventa/src/inventa/datastore"
-	"github.com/shelson/inventa/src/inventa/spf"
-	"github.com/shelson/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/src/inventa/datastore"
+	"github.com/neverthenetwork/inventa/src/inventa/spf"
+	"github.com/neverthenetwork/inventa/src/inventa/utils"
 
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
