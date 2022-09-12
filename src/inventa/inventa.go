@@ -93,14 +93,17 @@ func main() {
 	http.Handle("/resources/", http.StripPrefix("/resources", fileServer))
 	http.HandleFunc("/", web.IndexHandler)
 	http.HandleFunc("/vr", web.VRIndexHandler)
+	http.HandleFunc("/3d", web.ThreeDIndexHandler)
 	http.HandleFunc("/elementdata.json", web.JsHandler)
 	logging.Log.Info(fmt.Sprintf("Starting web server on port %d", utils.Configs.HTTPListenPort))
-<<<<<<< HEAD
-	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), "../../cert/certificate.pem", "../../cert/key.pem", nil); err != nil {
-=======
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
->>>>>>> 70e616ad3a63deaa9c2b7cebed520c9ade67d5cf
-		logging.Log.Fatal(err)
+	if utils.Configs.HTTPSEnable {
+		if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), "../../cert/certificate.pem", "../../cert/key.pem", nil); err != nil {
+			logging.Log.Fatal(err)
+		}
+	} else {
+		if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
+			logging.Log.Fatal(err)
+		}
 	}
 
 	select {}
