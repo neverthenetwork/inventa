@@ -90,8 +90,10 @@ func main() {
 	fileServer := http.FileServer(http.Dir("../../static"))
 	http.Handle("/resources/", http.StripPrefix("/resources", fileServer))
 	http.HandleFunc("/", web.IndexHandler)
+	http.HandleFunc("/vr", web.VRIndexHandler)
 	http.HandleFunc("/elementdata.json", web.JsHandler)
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), nil); err != nil {
+	logging.Log.Info(fmt.Sprintf("Starting web server on port %d", utils.Configs.HTTPListenPort))
+	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", utils.Configs.HTTPListenPort), "../../cert/certificate.pem", "../../cert/key.pem", nil); err != nil {
 		logging.Log.Fatal(err)
 	}
 

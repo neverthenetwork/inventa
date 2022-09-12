@@ -20,6 +20,13 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", string(content))
 }
 
+// VRIndexHandler is the handler for the VR index page
+func VRIndexHandler(w http.ResponseWriter, r *http.Request) {
+	content, _ := os.ReadFile("../../static/vrindex.html")
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, "%s", string(content))
+}
+
 // JsHandler is the handler for returning the json data
 func JsHandler(w http.ResponseWriter, r *http.Request) {
 	var includeList = []string{}
