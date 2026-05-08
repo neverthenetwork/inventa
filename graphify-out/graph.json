@@ -1,0 +1,1214 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "main.py",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "id": "main_py",
+      "community": 7,
+      "norm_label": "main.py"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "id": "inventa_main_main",
+      "community": 7,
+      "norm_label": "main()"
+    },
+    {
+      "label": "inventa.go",
+      "file_type": "code",
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L1",
+      "id": "src_inventa_inventa_go",
+      "community": 0,
+      "norm_label": "inventa.go"
+    },
+    {
+      "label": "loadJSON()",
+      "file_type": "code",
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L21",
+      "id": "inventa_inventa_loadjson",
+      "community": 0,
+      "norm_label": "loadjson()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L29",
+      "id": "inventa_inventa_main",
+      "community": 0,
+      "norm_label": "main()"
+    },
+    {
+      "label": "logging.go",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L1",
+      "id": "src_inventa_logging_logging_go",
+      "community": 1,
+      "norm_label": "logging.go"
+    },
+    {
+      "label": "SetUpLogger()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L12",
+      "id": "logging_logging_setuplogger",
+      "community": 1,
+      "norm_label": "setuplogger()"
+    },
+    {
+      "label": "MyLogger",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L19",
+      "id": "logging_mylogger",
+      "community": 1,
+      "norm_label": "mylogger"
+    },
+    {
+      "label": ".Panic()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L24",
+      "id": "logging_mylogger_panic",
+      "community": 1,
+      "norm_label": ".panic()"
+    },
+    {
+      "label": ".Fatal()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L29",
+      "id": "logging_mylogger_fatal",
+      "community": 1,
+      "norm_label": ".fatal()"
+    },
+    {
+      "label": ".Error()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L34",
+      "id": "logging_mylogger_error",
+      "community": 1,
+      "norm_label": ".error()"
+    },
+    {
+      "label": ".Warn()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L39",
+      "id": "logging_mylogger_warn",
+      "community": 1,
+      "norm_label": ".warn()"
+    },
+    {
+      "label": ".Info()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L44",
+      "id": "logging_mylogger_info",
+      "community": 1,
+      "norm_label": ".info()"
+    },
+    {
+      "label": ".Debug()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L49",
+      "id": "logging_mylogger_debug",
+      "community": 1,
+      "norm_label": ".debug()"
+    },
+    {
+      "label": ".SetLevel()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L54",
+      "id": "logging_mylogger_setlevel",
+      "community": 1,
+      "norm_label": ".setlevel()"
+    },
+    {
+      "label": ".GetLevel()",
+      "file_type": "code",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L59",
+      "id": "logging_mylogger_getlevel",
+      "community": 1,
+      "norm_label": ".getlevel()"
+    },
+    {
+      "label": "bgpls.go",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L1",
+      "id": "src_inventa_input_bgpls_bgpls_go",
+      "community": 5,
+      "norm_label": "bgpls.go"
+    },
+    {
+      "label": "nodeNLRI",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L19",
+      "id": "bgpls_nodenlri",
+      "community": 5,
+      "norm_label": "nodenlri"
+    },
+    {
+      "label": "linkNLRI",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L24",
+      "id": "bgpls_linknlri",
+      "community": 5,
+      "norm_label": "linknlri"
+    },
+    {
+      "label": "prefixEntry",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L33",
+      "id": "bgpls_prefixentry",
+      "community": 5,
+      "norm_label": "prefixentry"
+    },
+    {
+      "label": "prefixNLRI",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L38",
+      "id": "bgpls_prefixnlri",
+      "community": 5,
+      "norm_label": "prefixnlri"
+    },
+    {
+      "label": "MakePeerConfiguration()",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L43",
+      "id": "bgpls_bgpls_makepeerconfiguration",
+      "community": 0,
+      "norm_label": "makepeerconfiguration()"
+    },
+    {
+      "label": "ProcessBGPUpdates()",
+      "file_type": "code",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L73",
+      "id": "bgpls_bgpls_processbgpupdates",
+      "community": 0,
+      "norm_label": "processbgpupdates()"
+    },
+    {
+      "label": "spf.go",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L1",
+      "id": "src_inventa_spf_spf_go",
+      "community": 2,
+      "norm_label": "spf.go"
+    },
+    {
+      "label": "PathSegment",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L12",
+      "id": "spf_pathsegment",
+      "community": 2,
+      "norm_label": "pathsegment"
+    },
+    {
+      "label": "BestPath",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L18",
+      "id": "spf_bestpath",
+      "community": 2,
+      "norm_label": "bestpath"
+    },
+    {
+      "label": "BestPaths",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L23",
+      "id": "spf_bestpaths",
+      "community": 2,
+      "norm_label": "bestpaths"
+    },
+    {
+      "label": "makeDijkstra()",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L27",
+      "id": "spf_spf_makedijkstra",
+      "community": 2,
+      "norm_label": "makedijkstra()"
+    },
+    {
+      "label": "makeNameList()",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L52",
+      "id": "spf_spf_makenamelist",
+      "community": 2,
+      "norm_label": "makenamelist()"
+    },
+    {
+      "label": "FindNode()",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L62",
+      "id": "spf_spf_findnode",
+      "community": 2,
+      "norm_label": "findnode()"
+    },
+    {
+      "label": "GetBestPathNames()",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L72",
+      "id": "spf_spf_getbestpathnames",
+      "community": 2,
+      "norm_label": "getbestpathnames()"
+    },
+    {
+      "label": "GetPathSegments()",
+      "file_type": "code",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L97",
+      "id": "spf_spf_getpathsegments",
+      "community": 2,
+      "norm_label": "getpathsegments()"
+    },
+    {
+      "label": "utils.go",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L1",
+      "id": "src_inventa_utils_utils_go",
+      "community": 0,
+      "norm_label": "utils.go"
+    },
+    {
+      "label": "Conf",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L12",
+      "id": "utils_conf",
+      "community": 0,
+      "norm_label": "conf"
+    },
+    {
+      "label": "FindInArray()",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L31",
+      "id": "utils_utils_findinarray",
+      "community": 3,
+      "norm_label": "findinarray()"
+    },
+    {
+      "label": "InitConfig()",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L41",
+      "id": "utils_utils_initconfig",
+      "community": 0,
+      "norm_label": "initconfig()"
+    },
+    {
+      "label": "StripUnwanted()",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L53",
+      "id": "utils_utils_stripunwanted",
+      "community": 0,
+      "norm_label": "stripunwanted()"
+    },
+    {
+      "label": "utils_test.go",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L1",
+      "id": "src_inventa_utils_utils_test_go",
+      "community": 0,
+      "norm_label": "utils_test.go"
+    },
+    {
+      "label": "TestInitConfig()",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L7",
+      "id": "utils_utils_test_testinitconfig",
+      "community": 0,
+      "norm_label": "testinitconfig()"
+    },
+    {
+      "label": "TestStripUnwanted()",
+      "file_type": "code",
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L24",
+      "id": "utils_utils_test_teststripunwanted",
+      "community": 0,
+      "norm_label": "teststripunwanted()"
+    },
+    {
+      "label": "datastore.go",
+      "file_type": "code",
+      "source_file": "src/inventa/datastore/datastore.go",
+      "source_location": "L1",
+      "id": "src_inventa_datastore_datastore_go",
+      "community": 6,
+      "norm_label": "datastore.go"
+    },
+    {
+      "label": "myElements",
+      "file_type": "code",
+      "source_file": "src/inventa/datastore/datastore.go",
+      "source_location": "L7",
+      "id": "datastore_myelements",
+      "community": 6,
+      "norm_label": "myelements"
+    },
+    {
+      "label": ".getName()",
+      "file_type": "code",
+      "source_file": "src/inventa/datastore/datastore.go",
+      "source_location": "L11",
+      "id": "datastore_myelements_getname",
+      "community": 6,
+      "norm_label": ".getname()"
+    },
+    {
+      "label": "web.go",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L1",
+      "id": "src_inventa_web_web_go",
+      "community": 3,
+      "norm_label": "web.go"
+    },
+    {
+      "label": "IndexHandler()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L17",
+      "id": "web_web_indexhandler",
+      "community": 3,
+      "norm_label": "indexhandler()"
+    },
+    {
+      "label": "VRIndexHandler()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L24",
+      "id": "web_web_vrindexhandler",
+      "community": 3,
+      "norm_label": "vrindexhandler()"
+    },
+    {
+      "label": "ThreeDIndexHandler()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L31",
+      "id": "web_web_threedindexhandler",
+      "community": 3,
+      "norm_label": "threedindexhandler()"
+    },
+    {
+      "label": "JsHandler()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L38",
+      "id": "web_web_jshandler",
+      "community": 3,
+      "norm_label": "jshandler()"
+    },
+    {
+      "label": "filterNodes()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L60",
+      "id": "web_web_filternodes",
+      "community": 3,
+      "norm_label": "filternodes()"
+    },
+    {
+      "label": "filterEdges()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L80",
+      "id": "web_web_filteredges",
+      "community": 3,
+      "norm_label": "filteredges()"
+    },
+    {
+      "label": "collapsePathPairs()",
+      "file_type": "code",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L110",
+      "id": "web_web_collapsepathpairs",
+      "community": 3,
+      "norm_label": "collapsepathpairs()"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "id": "readme_md",
+      "community": 4,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "Inventa (latin for Discovery)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "id": "inventa_readme_inventa_latin_for_discovery",
+      "community": 4,
+      "norm_label": "inventa (latin for discovery)"
+    },
+    {
+      "label": "To use",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L19",
+      "id": "inventa_readme_to_use",
+      "community": 4,
+      "norm_label": "to use"
+    },
+    {
+      "label": "code:block1 (cd src/inventa/)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L23",
+      "id": "inventa_readme_codeblock_1",
+      "community": 4,
+      "norm_label": "code:block1 (cd src/inventa/)"
+    },
+    {
+      "label": "Docker",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L28",
+      "id": "inventa_readme_docker",
+      "community": 4,
+      "norm_label": "docker"
+    },
+    {
+      "label": "code:block2 (docker build -t inventa .)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L32",
+      "id": "inventa_readme_codeblock_2",
+      "community": 4,
+      "norm_label": "code:block2 (docker build -t inventa .)"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "main_py",
+      "target": "inventa_main_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_inventa_inventa_go",
+      "target": "inventa_inventa_loadjson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "src_inventa_inventa_go",
+      "target": "inventa_inventa_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "inventa_inventa_main",
+      "target": "inventa_inventa_loadjson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "inventa_inventa_main",
+      "target": "logging_logging_setuplogger"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "inventa_inventa_main",
+      "target": "utils_utils_initconfig"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "inventa_inventa_main",
+      "target": "bgpls_bgpls_processbgpupdates"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/inventa.go",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "inventa_inventa_main",
+      "target": "bgpls_bgpls_makepeerconfiguration"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_inventa_logging_logging_go",
+      "target": "logging_logging_setuplogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "src_inventa_logging_logging_go",
+      "target": "logging_mylogger",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "logging_logging_setuplogger",
+      "target": "logging_mylogger_setlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "logging_logging_setuplogger",
+      "target": "logging_mylogger_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_panic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_fatal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_error",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_warn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_info",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_debug",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_setlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/logging/logging.go",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "logging_mylogger",
+      "target": "logging_mylogger_getlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "src_inventa_input_bgpls_bgpls_go",
+      "target": "bgpls_nodenlri",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_inventa_input_bgpls_bgpls_go",
+      "target": "bgpls_linknlri",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "src_inventa_input_bgpls_bgpls_go",
+      "target": "bgpls_prefixentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "src_inventa_input_bgpls_bgpls_go",
+      "target": "bgpls_prefixnlri",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "src_inventa_input_bgpls_bgpls_go",
+      "target": "bgpls_bgpls_makepeerconfiguration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "src_inventa_input_bgpls_bgpls_go",
+      "target": "bgpls_bgpls_processbgpupdates",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "bgpls_bgpls_processbgpupdates",
+      "target": "utils_utils_stripunwanted"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/input/bgpls/bgpls.go",
+      "source_location": "L182",
+      "weight": 1.0,
+      "source": "bgpls_bgpls_processbgpupdates",
+      "target": "utils_utils_findinarray"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_pathsegment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_bestpath",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_bestpaths",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_spf_makedijkstra",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_spf_makenamelist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_spf_findnode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_spf_getbestpathnames",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "src_inventa_spf_spf_go",
+      "target": "spf_spf_getpathsegments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "spf_spf_getbestpathnames",
+      "target": "spf_spf_makedijkstra",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/spf/spf.go",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "spf_spf_getbestpathnames",
+      "target": "spf_spf_makenamelist",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "web_web_jshandler",
+      "target": "spf_spf_getbestpathnames"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "web_web_jshandler",
+      "target": "spf_spf_getpathsegments"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "src_inventa_utils_utils_go",
+      "target": "utils_conf",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "src_inventa_utils_utils_go",
+      "target": "utils_utils_findinarray",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "src_inventa_utils_utils_go",
+      "target": "utils_utils_initconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/utils/utils.go",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "src_inventa_utils_utils_go",
+      "target": "utils_utils_stripunwanted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "web_web_filternodes",
+      "target": "utils_utils_findinarray"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L113",
+      "weight": 1.0,
+      "source": "web_web_collapsepathpairs",
+      "target": "utils_utils_findinarray"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "utils_utils_test_testinitconfig",
+      "target": "utils_utils_initconfig"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "utils_utils_test_teststripunwanted",
+      "target": "utils_utils_stripunwanted"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_inventa_utils_utils_test_go",
+      "target": "utils_utils_test_testinitconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/utils/utils_test.go",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_inventa_utils_utils_test_go",
+      "target": "utils_utils_test_teststripunwanted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/datastore/datastore.go",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_inventa_datastore_datastore_go",
+      "target": "datastore_myelements",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/datastore/datastore.go",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "datastore_myelements",
+      "target": "datastore_myelements_getname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_indexhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_vrindexhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_threedindexhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_jshandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_filternodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_filteredges",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L110",
+      "weight": 1.0,
+      "source": "src_inventa_web_web_go",
+      "target": "web_web_collapsepathpairs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "web_web_jshandler",
+      "target": "web_web_collapsepathpairs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "web_web_jshandler",
+      "target": "web_web_filternodes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/inventa/web/web.go",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "web_web_jshandler",
+      "target": "web_web_filteredges",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "readme_md",
+      "target": "inventa_readme_inventa_latin_for_discovery",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "inventa_readme_inventa_latin_for_discovery",
+      "target": "inventa_readme_to_use",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "inventa_readme_inventa_latin_for_discovery",
+      "target": "inventa_readme_docker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "inventa_readme_to_use",
+      "target": "inventa_readme_codeblock_1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "inventa_readme_docker",
+      "target": "inventa_readme_codeblock_2",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "25519a52a5fce653af71ce00b8a40f0950e2a610"
+}
