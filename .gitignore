@@ -17,3 +17,13 @@ cert/
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Graphify temporary files
+.graphify_*
+
