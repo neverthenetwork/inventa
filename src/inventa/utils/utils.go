@@ -16,7 +16,7 @@ type Conf struct {
 	PeerIPv4Address       string   `yaml:"peer_ipv4_address"`
 	PeerASN               int      `yaml:"peer_asn"`
 	HTTPListenPort        int      `yaml:"http_listen_port"`
-	HTTPSEnable           bool     `yaml:"enable_https"`
+	HTTPSEnable           bool     `yaml:"https_enable"`
 	HTTPSCertFile         string   `yaml:"https_cert_file"`
 	HTTPSKeyFile          string   `yaml:"https_key_file"`
 	NodeNameStripPatterns []string `yaml:"node_name_strip_patterns" default:"[]"`
