@@ -1,10 +1,10 @@
-package utils
+package config
 
 import (
 	"os"
 	"regexp"
 
-	"github.com/neverthenetwork/inventa/src/inventa/logging"
+	"github.com/neverthenetwork/inventa/internal/logging"
 	"gopkg.in/yaml.v3"
 )
 

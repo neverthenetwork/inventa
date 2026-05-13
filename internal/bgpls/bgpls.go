@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/neverthenetwork/inventa/src/inventa/datastore"
-	"github.com/neverthenetwork/inventa/src/inventa/logging"
-	"github.com/neverthenetwork/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/internal/config"
+	"github.com/neverthenetwork/inventa/internal/datastore"
+	"github.com/neverthenetwork/inventa/internal/logging"
 
 	api "github.com/osrg/gobgp/v3/api"
 	"github.com/osrg/gobgp/v3/pkg/server"
@@ -131,7 +131,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 							pattrObj, _ := pattr.UnmarshalNew()
 							switch pattrObj := pattrObj.(type) {
 							case *api.LsAttribute:
-								nodeName = utils.StripUnwanted(pattrObj.Node.Name)
+								nodeName = config.StripUnwanted(pattrObj.Node.Name)
 								nodelocalRouterID = pattrObj.Node.LocalRouterId
 								igpMetric = pattrObj.Link.IgpMetric
 								srAdjacencySid = pattrObj.Link.SrAdjacencySid
@@ -176,16 +176,16 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 			nodeGroups := []string{}
 			for _, val := range newNodeMap {
 				nodeGroup := "noGroup"
-				if utils.Configs.GroupSplitChar != "" {
-					nodeParts := strings.Split(val.nodeName, utils.Configs.GroupSplitChar)
-					nodeGroup := nodeParts[utils.Configs.GroupSplitIndex]
-					if _, found := utils.FindInArray(nodeGroup, nodeGroups); !found {
+				if config.Configs.GroupSplitChar != "" {
+					nodeParts := strings.Split(val.nodeName, config.Configs.GroupSplitChar)
+					nodeGroup := nodeParts[config.Configs.GroupSplitIndex]
+					if _, found := config.FindInArray(nodeGroup, nodeGroups); !found {
 						nodeGroups = append(nodeGroups, nodeGroup)
 					}
 				} else {
 					nodeGroups = []string{"NoGroup"}
 				}
-				nodeGroupIndex, _ := utils.FindInArray(nodeGroup, nodeGroups)
+				nodeGroupIndex, _ := config.FindInArray(nodeGroup, nodeGroups)
 				node := cy.Node{
 					Data: cy.NodeData{
 						ID: val.nodeName,
