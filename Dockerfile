@@ -1,19 +1,26 @@
-# Build stage
-FROM golang:1.24 AS builder
+# Frontend build stage
+FROM node:22-alpine AS frontend
+WORKDIR /app/web
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+COPY web/ ./
+RUN npm run build
 
+# Go build stage
+FROM golang:1.24 AS builder
 WORKDIR /app
 
 # Pre-cache dependencies
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
-# Copy source and build
+# Copy source and frontend build output
 COPY . .
+COPY --from=frontend /app/cmd/inventa/web-dist ./cmd/inventa/web-dist
 RUN CGO_ENABLED=0 go build -v -o /usr/local/bin/inventa ./cmd/inventa/
 
 # Runtime stage
 FROM gcr.io/distroless/static-debian12:nonroot
-
 WORKDIR /app
 
 # Copy binary

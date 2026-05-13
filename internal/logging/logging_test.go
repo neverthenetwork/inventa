@@ -45,26 +45,26 @@ func TestSlogAdapter_toAttrs(t *testing.T) {
 	}
 }
 
-func TestSlogAdapter_Info(t *testing.T) {
+func TestSlogAdapter_Info(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	// Info should not panic
 	a.Info("test message", log.Fields{"key": "value"})
 }
 
-func TestSlogAdapter_Debug(t *testing.T) {
+func TestSlogAdapter_Debug(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	a.Debug("debug message", log.Fields{})
 }
 
-func TestSlogAdapter_Warn(t *testing.T) {
+func TestSlogAdapter_Warn(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	a.Warn("warning", log.Fields{"code": 404})
 }
 
-func TestSlogAdapter_Error(t *testing.T) {
+func TestSlogAdapter_Error(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	a.Error("error occurred", log.Fields{"err": "something broke"})
@@ -79,7 +79,7 @@ func TestSlogAdapter_GetLevel(t *testing.T) {
 	}
 }
 
-func TestSlogAdapter_SetLevel(t *testing.T) {
+func TestSlogAdapter_SetLevel(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	// SetLevel is a no-op; should not panic

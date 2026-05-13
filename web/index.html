@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Graph-O-Matic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <h1>Graph-O-Matic</h1>
+
+  <div class="flex-container">
+    <div class="menu" id="details">
+      <textarea id="include_patterns" rows="5" cols="25"></textarea>
+      <button type="button" id="update_btn">Update</button>
+      <select id="src_select">
+        <option value="">None</option>
+      </select>
+      <select id="dst_select">
+        <option value="">None</option>
+      </select>
+    </div>
+
+    <div class="cy" id="cy"></div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

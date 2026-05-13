@@ -24,7 +24,7 @@ type Server struct {
 
 // IndexHandler serves the 2D cytoscape view.
 func (s *Server) IndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := fs.ReadFile(s.StaticFS, "static/index.html")
+	content, err := fs.ReadFile(s.StaticFS, "web-dist/index.html")
 	if err != nil {
 		http.Error(w, "index not found", http.StatusInternalServerError)
 		return
@@ -35,7 +35,7 @@ func (s *Server) IndexHandler(w http.ResponseWriter, _ *http.Request) {
 
 // VRIndexHandler serves the VR 3D force graph view.
 func (s *Server) VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := fs.ReadFile(s.StaticFS, "static/vrindex.html")
+	content, err := fs.ReadFile(s.StaticFS, "web-dist/vrindex.html")
 	if err != nil {
 		http.Error(w, "VR view not found", http.StatusInternalServerError)
 		return
@@ -46,7 +46,7 @@ func (s *Server) VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
 
 // ThreeDIndexHandler serves the 3D force graph view.
 func (s *Server) ThreeDIndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := fs.ReadFile(s.StaticFS, "static/3dindex.html")
+	content, err := fs.ReadFile(s.StaticFS, "web-dist/3dindex.html")
 	if err != nil {
 		http.Error(w, "3D view not found", http.StatusInternalServerError)
 		return
