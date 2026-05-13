@@ -79,7 +79,7 @@ func TestIntegration_elementdataEndpoint(t *testing.T) {
 	})
 
 	srv := &web.Server{
-		StaticFS: staticFiles,
+		StaticFS: webDist,
 		Store:    store,
 		Cfg:      &config.Conf{HTTPListenPort: 8080},
 		Logger:   testLogger,

@@ -18,7 +18,7 @@ import (
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
-//go:embed testdata/static/*
+//go:embed testdata/web-dist/*
 var testStaticFS embed.FS
 
 func testLogger() *slog.Logger {

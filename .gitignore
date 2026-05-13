@@ -27,3 +27,6 @@ __pycache__/
 # Graphify temporary files
 .graphify_*
 
+cmd/inventa/web-dist/
+web/node_modules/
+web/dist/

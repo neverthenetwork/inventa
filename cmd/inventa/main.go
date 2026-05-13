@@ -23,8 +23,8 @@ import (
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
-//go:embed static/*
-var staticFiles embed.FS
+//go:embed web-dist/*
+var webDist embed.FS
 
 func loadJSON(fileName string, store *datastore.TopologyStore) error {
 	content, err := os.ReadFile(fileName)
@@ -63,7 +63,7 @@ func main() {
 
 	// Set up web server with dependencies
 	webSrv := &web.Server{
-		StaticFS: staticFiles,
+		StaticFS: webDist,
 		Store:    store,
 		Cfg:      cfg,
 		Logger:   logger,
@@ -121,13 +121,13 @@ func main() {
 		}
 	}
 
-	// Serve static files from embedded filesystem
-	staticFS, err := fs.Sub(staticFiles, "static")
+	// Serve static files from embedded Vite build output
+	distFS, err := fs.Sub(webDist, "web-dist")
 	if err != nil {
-		logger.Error("failed to create static sub-filesystem", "error", err)
+		logger.Error("failed to create dist sub-filesystem", "error", err)
 		os.Exit(1)
 	}
-	fileServer := http.FileServer(http.FS(staticFS))
+	fileServer := http.FileServer(http.FS(distFS))
 	http.Handle("/resources/", http.StripPrefix("/resources", fileServer))
 	http.HandleFunc("/", webSrv.IndexHandler)
 	http.HandleFunc("/vr", webSrv.VRIndexHandler)

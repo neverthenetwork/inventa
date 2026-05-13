@@ -10,8 +10,42 @@ permissions:
   contents: read
 
 jobs:
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: cd web && npm ci
+
+      - name: Type check
+        run: cd web && npm run typecheck
+
+      - name: Lint
+        run: cd web && npm run lint
+
+      - name: Test
+        run: cd web && npm test
+
+      - name: Build
+        run: cd web && npm run build
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: cmd/inventa/web-dist/
+
   lint:
     name: Lint
+    needs: frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +54,12 @@ jobs:
         with:
           go-version: "1.24"
           cache: true
+
+      - name: Download web-dist
+        uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: cmd/inventa/web-dist/
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -42,6 +82,7 @@ jobs:
 
   test:
     name: Test
+    needs: frontend
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -53,6 +94,12 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
+
+      - name: Download web-dist
+        uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: cmd/inventa/web-dist/
 
       - name: Vet
         run: go vet ./...
