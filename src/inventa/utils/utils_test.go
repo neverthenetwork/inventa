@@ -15,7 +15,7 @@ func TestInitConfig(t *testing.T) {
 		{"config test - pass", args{"../../../config.yaml.example"}},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			InitConfig(tt.args.fileName)
 		})
 	}
@@ -35,7 +35,7 @@ func TestStripUnwanted(t *testing.T) {
 		{"strip unwanted - regex nomatch", args{"re0-test"}, "re0-test"},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			if got := StripUnwanted(tt.args.name); got != tt.want {
 				t.Errorf("StripUnwanted() = %v, want %v", got, tt.want)
 			}

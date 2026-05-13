@@ -5,7 +5,7 @@ import (
 	"regexp"
 
 	"github.com/neverthenetwork/inventa/src/inventa/logging"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // Conf holds configuration information
