@@ -202,6 +202,12 @@ textarea {
   outline-offset: 2px;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ── Graph Container ──────────────────────────────────────── */
 .graph-pane {
   position: relative;
@@ -277,6 +283,68 @@ textarea {
 /* but these catch any DOM elements created by the library. */
 .cy-panzoom {
   background: transparent !important;
+}
+
+/* ── State Overlays (loading, error, empty) ───────────────── */
+.state-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  background: var(--color-bg);
+  z-index: 10;
+  transition: opacity var(--transition);
+}
+
+.state-overlay.hidden {
+  display: none;
+}
+
+.state-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.state-message {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  max-width: 320px;
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error overlay */
+.error-overlay .state-icon {
+  color: var(--color-danger);
+}
+
+.error-overlay .state-message {
+  color: var(--color-danger);
+}
+
+/* Empty overlay */
+.empty-overlay .state-icon {
+  opacity: 0.6;
+}
+
+.btn-retry {
+  margin-top: var(--space-2);
 }
 
 /* ── Utility classes ──────────────────────────────────────── */
