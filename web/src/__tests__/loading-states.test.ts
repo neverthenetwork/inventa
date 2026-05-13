@@ -111,6 +111,13 @@ describe('showEmpty / hideEmpty', () => {
     hideEmpty(container);
     expect(container.querySelector('.empty-overlay')!.classList.contains('hidden')).toBe(true);
   });
+
+  it('escapes HTML in empty message', () => {
+    showEmpty(container, '<img src=x onerror=alert(1)>');
+    const msg = container.querySelector('.state-message')!;
+    expect(msg.innerHTML).toContain('&lt;img');
+    expect(msg.innerHTML).not.toContain('<img');
+  });
 });
 
 describe('clearStates', () => {

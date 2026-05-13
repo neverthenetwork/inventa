@@ -47,7 +47,7 @@ export function showError(
   `;
   el.classList.remove(HIDDEN_CLS);
 
-  // Wire up retry button
+  // Wire up retry button (innerHTML reassigns DOM, so old listeners are destroyed — no leak)
   const btn = el.querySelector('.btn-retry');
   if (btn) {
     btn.addEventListener('click', () => {
@@ -137,5 +137,7 @@ function escapeHtml(str: string): string {
     '"': '&quot;',
     "'": '&#39;',
   };
+  // The regex only matches mapped characters, so map[ch] is always defined;
+  // the '|| ch' fallback is a type-safety guard for the TypeScript compiler.
   return str.replace(/[&<>"']/g, (ch) => map[ch] || ch);
 }

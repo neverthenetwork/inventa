@@ -296,11 +296,13 @@ textarea {
   gap: var(--space-4);
   background: var(--color-bg);
   z-index: 10;
+  opacity: 1;
   transition: opacity var(--transition);
 }
 
 .state-overlay.hidden {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .state-icon {
