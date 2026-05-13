@@ -1,33 +1,33 @@
 package spf
 
 import (
+	"log/slog"
 	"strconv"
 
 	"github.com/RyanCarrier/dijkstra"
-	"github.com/neverthenetwork/inventa/internal/logging"
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
-// PathSegment is a pair of nodes
+// PathSegment is a pair of nodes.
 type PathSegment struct {
 	Src string
 	Dst string
 }
 
-// BestPath is a list of nodes in a shortest path
+// BestPath is a list of nodes in a shortest path.
 type BestPath struct {
 	Path []string
 }
 
-// BestPaths is a list of BestPath objects
+// BestPaths is a list of BestPath objects.
 type BestPaths struct {
 	Paths []BestPath
 }
 
-func makeDijkstra(elements cy.Elements) (*dijkstra.Graph, error) {
+func makeDijkstra(elements cy.Elements, logger *slog.Logger) (*dijkstra.Graph, error) {
 	graph := dijkstra.NewGraph()
 	for _, n := range elements.Nodes {
-		logging.Log.Info("Adding node: " + n.Data.ID)
+		logger.Debug("adding node", "id", n.Data.ID)
 		graph.AddMappedVertex(n.Data.ID)
 	}
 
@@ -37,13 +37,17 @@ func makeDijkstra(elements cy.Elements) (*dijkstra.Graph, error) {
 		if !ok {
 			metricInt = 10 // default metric
 		} else {
-			metric, _ := strconv.ParseInt(metricString.(string), 10, 64)
-			metricInt = metric
+			metric, err := strconv.ParseInt(metricString.(string), 10, 64)
+			if err != nil {
+				metricInt = 10
+			} else {
+				metricInt = metric
+			}
 		}
-		logging.Log.Info("Adding edge: " + v.Data.Source + " -> " + v.Data.Target + " (" + strconv.FormatInt(metricInt, 10) + ")")
+		logger.Debug("adding edge", "src", v.Data.Source, "dst", v.Data.Target, "metric", metricInt)
 		if err := graph.AddMappedArc(v.Data.Source, v.Data.Target, metricInt); err != nil {
 			return nil, err
-		} // TODO add metric
+		}
 	}
 
 	return graph, nil
@@ -58,7 +62,7 @@ func makeNameList(graph *dijkstra.Graph, paths dijkstra.BestPath) []string {
 	return names
 }
 
-// FindNode checks whether a node exists in the list of nodes
+// FindNode checks whether a node exists in the list of nodes.
 func FindNode(what string, where []cy.Node) (idx int, found bool) {
 	for i, v := range where {
 		if v.Data.ID == what {
@@ -68,11 +72,20 @@ func FindNode(what string, where []cy.Node) (idx int, found bool) {
 	return 0, false
 }
 
-// GetBestPathNames finds the shortest path(s) from src to dst, converting them to names
-func GetBestPathNames(elements cy.Elements, src string, dst string) (BestPaths, error) {
-	graph, _ := makeDijkstra(elements)
-	srcIdx, _ := graph.GetMapping(src)
-	dstIdx, _ := graph.GetMapping(dst)
+// GetBestPathNames finds the shortest path(s) from src to dst.
+func GetBestPathNames(elements cy.Elements, src string, dst string, logger *slog.Logger) (BestPaths, error) {
+	graph, err := makeDijkstra(elements, logger)
+	if err != nil {
+		return BestPaths{}, err
+	}
+	srcIdx, err := graph.GetMapping(src)
+	if err != nil {
+		return BestPaths{}, err
+	}
+	dstIdx, err := graph.GetMapping(dst)
+	if err != nil {
+		return BestPaths{}, err
+	}
 	bestPathList, err := graph.ShortestAll(srcIdx, dstIdx)
 	if err != nil {
 		return BestPaths{
@@ -93,7 +106,7 @@ func GetBestPathNames(elements cy.Elements, src string, dst string) (BestPaths, 
 	return bestPathNames, nil
 }
 
-// GetPathSegments breaks a list of paths into a list of two-node segments
+// GetPathSegments breaks a list of paths into two-node segments.
 func GetPathSegments(paths BestPaths) []PathSegment {
 	var pathPairs []PathSegment
 	for _, b := range paths.Paths {
@@ -102,11 +115,9 @@ func GetPathSegments(paths BestPaths) []PathSegment {
 			if idx == 0 {
 				prev = p
 			} else {
-				srcName := prev
-				dstName := p
-				var ps = PathSegment{
-					Src: srcName,
-					Dst: dstName,
+				ps := PathSegment{
+					Src: prev,
+					Dst: p,
 				}
 				pathPairs = append(pathPairs, ps)
 				prev = p

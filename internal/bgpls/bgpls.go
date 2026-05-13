@@ -3,12 +3,12 @@ package bgpls
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
 
 	"github.com/neverthenetwork/inventa/internal/config"
 	"github.com/neverthenetwork/inventa/internal/datastore"
-	"github.com/neverthenetwork/inventa/internal/logging"
 
 	api "github.com/osrg/gobgp/v3/api"
 	"github.com/osrg/gobgp/v3/pkg/server"
@@ -39,7 +39,7 @@ type prefixNLRI struct {
 	prefixesReachable []prefixEntry
 }
 
-// MakePeerConfiguration returns a peer configuration for gobgp
+// MakePeerConfiguration returns a peer configuration for gobgp.
 func MakePeerConfiguration(peerIPv4Address string, peerASN int) *api.Peer {
 	return &api.Peer{
 		Conf: &api.PeerConf{
@@ -68,17 +68,22 @@ func MakePeerConfiguration(peerIPv4Address string, peerASN int) *api.Peer {
 	}
 }
 
-// ProcessBGPUpdates processes the updates, dumps the current table
-// and updates our datastore
-func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer) {
-
+// ProcessBGPUpdates processes BGP-LS updates and rebuilds the topology.
+func ProcessBGPUpdates(
+	r *api.WatchEventResponse,
+	count int,
+	s *server.BgpServer,
+	store *datastore.TopologyStore,
+	cfg *config.Conf,
+	logger *slog.Logger,
+) {
 	marshaller := protojson.MarshalOptions{
 		Indent:        "  ",
 		UseProtoNames: true,
 	}
 
 	if p := r.GetPeer(); p != nil && p.Type == api.WatchEventResponse_PeerEvent_STATE {
-		logging.Log.Info(p)
+		logger.Info("peer state change", "peer", p)
 	} else if t := r.GetTable(); t != nil {
 		newNodeMap := map[string]nodeNLRI{}
 		newReachMap := map[string]prefixNLRI{}
@@ -131,7 +136,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 							pattrObj, _ := pattr.UnmarshalNew()
 							switch pattrObj := pattrObj.(type) {
 							case *api.LsAttribute:
-								nodeName = config.StripUnwanted(pattrObj.Node.Name)
+								nodeName = cfg.StripUnwanted(pattrObj.Node.Name)
 								nodelocalRouterID = pattrObj.Node.LocalRouterId
 								igpMetric = pattrObj.Link.IgpMetric
 								srAdjacencySid = pattrObj.Link.SrAdjacencySid
@@ -163,22 +168,24 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 						}
 						if nlriType == "unknown" {
 							pathdump, _ := marshaller.Marshal(p.Nlri)
-							logging.Log.Info(string(pathdump))
+							logger.Info("unknown NLRI", "path", string(pathdump))
 						}
 					}
 				}); err != nil {
-				logging.Log.Fatal(err)
+				logger.Error("list path failed", "error", err)
+				return
 			}
-			datastore.Elements = cy.Elements{
+
+			elements := cy.Elements{
 				Nodes: make([]cy.Node, 0),
 				Edges: make([]cy.Edge, 0),
 			}
 			nodeGroups := []string{}
 			for _, val := range newNodeMap {
 				nodeGroup := "noGroup"
-				if config.Configs.GroupSplitChar != "" {
-					nodeParts := strings.Split(val.nodeName, config.Configs.GroupSplitChar)
-					nodeGroup := nodeParts[config.Configs.GroupSplitIndex]
+				if cfg.GroupSplitChar != "" {
+					nodeParts := strings.Split(val.nodeName, cfg.GroupSplitChar)
+					nodeGroup = nodeParts[cfg.GroupSplitIndex]
 					if _, found := config.FindInArray(nodeGroup, nodeGroups); !found {
 						nodeGroups = append(nodeGroups, nodeGroup)
 					}
@@ -197,7 +204,7 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 					},
 					Selectable: true,
 				}
-				datastore.Elements.Nodes = append(datastore.Elements.Nodes, node)
+				elements.Nodes = append(elements.Nodes, node)
 			}
 			for _, link := range newLinkTable {
 				edge := cy.Edge{
@@ -212,8 +219,9 @@ func ProcessBGPUpdates(r *api.WatchEventResponse, count int, s *server.BgpServer
 					},
 					Selectable: true,
 				}
-				datastore.Elements.Edges = append(datastore.Elements.Edges, edge)
+				elements.Edges = append(elements.Edges, edge)
 			}
+			store.Set(elements)
 		}
 	}
 }
