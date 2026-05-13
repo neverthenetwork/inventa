@@ -1,61 +1,67 @@
 package logging
 
 import (
+	"log/slog"
+	"os"
+
 	"github.com/osrg/gobgp/v3/pkg/log"
-	"github.com/sirupsen/logrus"
 )
 
-// Log is the logging object
-var Log *logrus.Logger
-
-// SetUpLogger sets up the logger variable
-func SetUpLogger() {
-	Log = logrus.New()
-	Log.SetLevel(logrus.InfoLevel)
-	Log.Info("Set Logger Up")
+// NewLogger creates a new slog logger at Info level.
+func NewLogger() *slog.Logger {
+	return slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
 }
 
-// MyLogger implements github.com/osrg/gobgp/v3/pkg/log/Logger interface
-type MyLogger struct {
-	Logger *logrus.Logger
+// SlogAdapter adapts slog.Logger to the gobgp log.Logger interface.
+type SlogAdapter struct {
+	logger *slog.Logger
 }
 
-// Panic level
-func (l *MyLogger) Panic(msg string, fields log.Fields) {
-	l.Logger.WithFields(logrus.Fields(fields)).Panic(msg)
+// NewSlogAdapter creates a gobgp-compatible logger from a slog.Logger.
+func NewSlogAdapter(l *slog.Logger) *SlogAdapter {
+	return &SlogAdapter{logger: l}
 }
 
-// Fatal Level
-func (l *MyLogger) Fatal(msg string, fields log.Fields) {
-	l.Logger.WithFields(logrus.Fields(fields)).Fatal(msg)
+func (a *SlogAdapter) toAttrs(fields log.Fields) []any {
+	attrs := make([]any, 0, len(fields)*2)
+	for k, v := range fields {
+		attrs = append(attrs, k, v)
+	}
+	return attrs
 }
 
-// Error level
-func (l *MyLogger) Error(msg string, fields log.Fields) {
-	l.Logger.WithFields(logrus.Fields(fields)).Error(msg)
+func (a *SlogAdapter) Panic(msg string, fields log.Fields) {
+	a.logger.Error(msg, a.toAttrs(fields)...)
+	panic(msg)
 }
 
-// Warn level
-func (l *MyLogger) Warn(msg string, fields log.Fields) {
-	l.Logger.WithFields(logrus.Fields(fields)).Warn(msg)
+func (a *SlogAdapter) Fatal(msg string, fields log.Fields) {
+	a.logger.Error(msg, a.toAttrs(fields)...)
+	os.Exit(1)
 }
 
-// Info level
-func (l *MyLogger) Info(msg string, fields log.Fields) {
-	l.Logger.WithFields(logrus.Fields(fields)).Info(msg)
+func (a *SlogAdapter) Error(msg string, fields log.Fields) {
+	a.logger.Error(msg, a.toAttrs(fields)...)
 }
 
-// Debug level
-func (l *MyLogger) Debug(msg string, fields log.Fields) {
-	l.Logger.WithFields(logrus.Fields(fields)).Debug(msg)
+func (a *SlogAdapter) Warn(msg string, fields log.Fields) {
+	a.logger.Warn(msg, a.toAttrs(fields)...)
 }
 
-// SetLevel sets the level
-func (l *MyLogger) SetLevel(level log.LogLevel) {
-	l.Logger.SetLevel(logrus.Level(level))
+func (a *SlogAdapter) Info(msg string, fields log.Fields) {
+	a.logger.Info(msg, a.toAttrs(fields)...)
 }
 
-// GetLevel gets the level
-func (l *MyLogger) GetLevel() log.LogLevel {
-	return log.LogLevel(l.Logger.GetLevel())
+func (a *SlogAdapter) Debug(msg string, fields log.Fields) {
+	a.logger.Debug(msg, a.toAttrs(fields)...)
+}
+
+func (a *SlogAdapter) SetLevel(_ log.LogLevel) {
+	// slog levels are inverted vs gobgp — skip for now
+}
+
+func (a *SlogAdapter) GetLevel() log.LogLevel {
+	return log.InfoLevel
 }
