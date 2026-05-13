@@ -3,50 +3,70 @@ package web
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"net/http"
-	"os"
 
-	"github.com/neverthenetwork/inventa/src/inventa/datastore"
-	"github.com/neverthenetwork/inventa/src/inventa/spf"
-	"github.com/neverthenetwork/inventa/src/inventa/utils"
+	"github.com/neverthenetwork/inventa/internal/config"
+	"github.com/neverthenetwork/inventa/internal/datastore"
+	"github.com/neverthenetwork/inventa/internal/spf"
 
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
-// IndexHandler is the handler for the index page
+// StaticFS holds the embedded static files.
+// Set by main before the HTTP server starts.
+var StaticFS fs.FS
+
+// IndexHandler serves the 2D cytoscape view.
 func IndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, _ := os.ReadFile("../../static/index.html")
+	content, err := fs.ReadFile(StaticFS, "static/index.html")
+	if err != nil {
+		http.Error(w, "index not found", http.StatusInternalServerError)
+		return
+	}
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, "%s", string(content))
+	fmt.Fprint(w, string(content))
 }
 
-// VRIndexHandler is the handler for the VR index page
+// VRIndexHandler serves the VR 3D force graph view.
 func VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, _ := os.ReadFile("../../static/vrindex.html")
+	content, err := fs.ReadFile(StaticFS, "static/vrindex.html")
+	if err != nil {
+		http.Error(w, "VR view not found", http.StatusInternalServerError)
+		return
+	}
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, "%s", string(content))
+	fmt.Fprint(w, string(content))
 }
 
-// ThreeDIndexHandler is the handler for the VR index page
+// ThreeDIndexHandler serves the 3D force graph view.
 func ThreeDIndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, _ := os.ReadFile("../../static/3dindex.html")
+	content, err := fs.ReadFile(StaticFS, "static/3dindex.html")
+	if err != nil {
+		http.Error(w, "3D view not found", http.StatusInternalServerError)
+		return
+	}
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, "%s", string(content))
+	fmt.Fprint(w, string(content))
 }
 
-// JsHandler is the handler for returning the json data
+// JsHandler returns topology data as JSON for the Cytoscape visualisation.
 func JsHandler(w http.ResponseWriter, r *http.Request) {
-	var includeList = []string{}
-	var pathPairs = []spf.PathSegment{}
+	var includeList []string
+	var pathPairs []spf.PathSegment
 	src := r.URL.Query().Get("src")
 	dst := r.URL.Query().Get("dst")
 	w.Header().Set("Content-Type", "application/json")
 	if src != "" && dst != "" {
-		bestPathNames, _ := spf.GetBestPathNames(datastore.Elements, src, dst)
+		bestPathNames, err := spf.GetBestPathNames(datastore.Elements, src, dst)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("path computation error: %v", err), http.StatusInternalServerError)
+			return
+		}
 		pathPairs = spf.GetPathSegments(bestPathNames)
 		includeList = collapsePathPairs(pathPairs)
 	}
-	var filteredElements = cy.Elements{
+	filteredElements := cy.Elements{
 		Nodes: make([]cy.Node, 0),
 		Edges: make([]cy.Edge, 0),
 	}
@@ -58,13 +78,13 @@ func JsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func filterNodes(nodes []cy.Node, includeList []string) []cy.Node {
-	var nodeList = make([]cy.Node, 0)
+	nodeList := make([]cy.Node, 0)
 	for _, n := range nodes {
 		if len(includeList) == 0 {
 			n.Data.Attributes["show"] = true
 			nodeList = append(nodeList, n)
 		} else {
-			_, found := utils.FindInArray(n.Data.ID, includeList)
+			_, found := config.FindInArray(n.Data.ID, includeList)
 			if found {
 				n.Data.Attributes["show"] = true
 				nodeList = append(nodeList, n)
@@ -78,7 +98,7 @@ func filterNodes(nodes []cy.Node, includeList []string) []cy.Node {
 }
 
 func filterEdges(edges []cy.Edge, pathPairs []spf.PathSegment) []cy.Edge {
-	var edgeList = make([]cy.Edge, 0)
+	edgeList := make([]cy.Edge, 0)
 	if len(pathPairs) == 0 {
 		for _, e := range edges {
 			e.Data.Attributes["show"] = true
@@ -86,11 +106,9 @@ func filterEdges(edges []cy.Edge, pathPairs []spf.PathSegment) []cy.Edge {
 		}
 	} else {
 		for _, e := range edges {
-			var found = false
+			var found bool
 			for _, pp := range pathPairs {
-				// fmt.Printf("%s:%s vs %s:%s\n", e.Data.Source, e.Data.Target, pp.src, pp.dst)
 				if e.Data.Source == pp.Src && e.Data.Target == pp.Dst {
-					// fmt.Printf("FOUND: %s:%s vs %s:%s\n", e.Data.Source, e.Data.Target, pp.src, pp.dst)
 					found = true
 				}
 			}
@@ -106,14 +124,14 @@ func filterEdges(edges []cy.Edge, pathPairs []spf.PathSegment) []cy.Edge {
 	return edgeList
 }
 
-// return a list of nodes that exist in the pathpairs list
+// collapsePathPairs returns a deduplicated list of all nodes in the path pairs.
 func collapsePathPairs(pathPairs []spf.PathSegment) []string {
-	var nodeList = make([]string, 0)
+	var nodeList []string
 	for _, pp := range pathPairs {
-		if _, f := utils.FindInArray(pp.Src, nodeList); !f {
+		if _, f := config.FindInArray(pp.Src, nodeList); !f {
 			nodeList = append(nodeList, pp.Src)
 		}
-		if _, f := utils.FindInArray(pp.Dst, nodeList); !f {
+		if _, f := config.FindInArray(pp.Dst, nodeList); !f {
 			nodeList = append(nodeList, pp.Dst)
 		}
 	}

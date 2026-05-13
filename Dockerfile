@@ -9,7 +9,7 @@ RUN go mod download && go mod verify
 
 # Copy source and build
 COPY . .
-RUN CGO_ENABLED=0 go build -v -o /usr/local/bin/inventa ./src/inventa/
+RUN CGO_ENABLED=0 go build -v -o /usr/local/bin/inventa ./cmd/inventa/
 
 # Runtime stage
 FROM gcr.io/distroless/static-debian12:nonroot
@@ -18,9 +18,6 @@ WORKDIR /app
 
 # Copy binary
 COPY --from=builder /usr/local/bin/inventa /usr/local/bin/inventa
-
-# Copy static files (will be replaced by embed in future)
-COPY static/ ./static/
 
 # Create config directory for mounted config
 RUN mkdir -p /etc/inventa
