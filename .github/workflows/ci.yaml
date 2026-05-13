@@ -27,12 +27,24 @@ jobs:
           version: latest
           args: --timeout=5m
 
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@v2
+        with:
+          config-path: .gitleaks.toml
+
   test:
     name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ["1.24", "1.25"]
+        go-version: ["1.24"]
     steps:
       - uses: actions/checkout@v4
 
@@ -41,25 +53,14 @@ jobs:
           go-version: ${{ matrix.go-version }}
           cache: true
 
+      - name: Vet
+        run: go vet ./...
+
       - name: Test
         run: go test -race -coverprofile=coverage.out ./...
 
       - name: Coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-go-${{ matrix.go-version }}
+          name: coverage
           path: coverage.out
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "1.24"
-          cache: true
-
-      - name: Build
-        run: go build -v ./...

@@ -22,6 +22,9 @@ COPY --from=builder /usr/local/bin/inventa /usr/local/bin/inventa
 # Copy static files (will be replaced by embed in future)
 COPY static/ ./static/
 
+# Create config directory for mounted config
+RUN mkdir -p /etc/inventa
+
 # Expose the HTTP port (config default is 8081)
 EXPOSE 8081
 
