@@ -1,17 +1,31 @@
-FROM golang:1.19
+# Build stage
+FROM golang:1.24 AS builder
 
-EXPOSE 8123
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
-RUN mkdir /etc/inventa
-
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+# Pre-cache dependencies
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
+# Copy source and build
 COPY . .
-RUN go build -v -o /usr/local/bin/ ./...
+RUN CGO_ENABLED=0 go build -v -o /usr/local/bin/inventa ./src/inventa/
 
-USER 1000:1000
-CMD ["/usr/local/bin/inventa", "-c", "/etc/inventa/config.yaml"]
+# Runtime stage
+FROM gcr.io/distroless/static-debian12:nonroot
+
+WORKDIR /app
+
+# Copy binary
+COPY --from=builder /usr/local/bin/inventa /usr/local/bin/inventa
+
+# Copy static files (will be replaced by embed in future)
+COPY static/ ./static/
+
+# Create config directory for mounted config
+RUN mkdir -p /etc/inventa
+
+# Expose the HTTP port (config default is 8081)
+EXPOSE 8081
+
+ENTRYPOINT ["/usr/local/bin/inventa", "-c", "/etc/inventa/config.yaml"]

@@ -14,21 +14,21 @@ import (
 )
 
 // IndexHandler is the handler for the index page
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
+func IndexHandler(w http.ResponseWriter, _ *http.Request) {
 	content, _ := os.ReadFile("../../static/index.html")
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, "%s", string(content))
 }
 
 // VRIndexHandler is the handler for the VR index page
-func VRIndexHandler(w http.ResponseWriter, r *http.Request) {
+func VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
 	content, _ := os.ReadFile("../../static/vrindex.html")
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, "%s", string(content))
 }
 
 // ThreeDIndexHandler is the handler for the VR index page
-func ThreeDIndexHandler(w http.ResponseWriter, r *http.Request) {
+func ThreeDIndexHandler(w http.ResponseWriter, _ *http.Request) {
 	content, _ := os.ReadFile("../../static/3dindex.html")
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, "%s", string(content))
