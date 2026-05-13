@@ -45,14 +45,14 @@ func TestSlogAdapter_toAttrs(t *testing.T) {
 	}
 }
 
-func TestSlogAdapter_Info(t *testing.T) {
+func TestSlogAdapter_Info(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	// Info should not panic
 	a.Info("test message", log.Fields{"key": "value"})
 }
 
-func TestSlogAdapter_Debug(t *testing.T) {
+func TestSlogAdapter_Debug(_ *testing.T) {
 	l := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	a := NewSlogAdapter(l)
 	a.Debug("debug message", log.Fields{})

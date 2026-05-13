@@ -87,7 +87,7 @@ func TestTopologyStoreGetNodeName(t *testing.T) {
 	}
 }
 
-func TestTopologyStoreConcurrency(t *testing.T) {
+func TestTopologyStoreConcurrency(_ *testing.T) {
 	ts := NewTopologyStore()
 	var wg sync.WaitGroup
 
