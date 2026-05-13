@@ -176,52 +176,62 @@ func ProcessBGPUpdates(
 				return
 			}
 
-			elements := cy.Elements{
-				Nodes: make([]cy.Node, 0),
-				Edges: make([]cy.Edge, 0),
-			}
-			nodeGroups := []string{}
-			for _, val := range newNodeMap {
-				nodeGroup := "noGroup"
-				if cfg.GroupSplitChar != "" {
-					nodeParts := strings.Split(val.nodeName, cfg.GroupSplitChar)
-					nodeGroup = nodeParts[cfg.GroupSplitIndex]
-					if _, found := config.FindInArray(nodeGroup, nodeGroups); !found {
-						nodeGroups = append(nodeGroups, nodeGroup)
-					}
-				} else {
-					nodeGroups = []string{"NoGroup"}
-				}
-				nodeGroupIndex, _ := config.FindInArray(nodeGroup, nodeGroups)
-				node := cy.Node{
-					Data: cy.NodeData{
-						ID: val.nodeName,
-						Attributes: map[string]interface{}{
-							"label":   val.nodeName,
-							"group":   nodeGroup,
-							"cluster": nodeGroupIndex,
-						},
-					},
-					Selectable: true,
-				}
-				elements.Nodes = append(elements.Nodes, node)
-			}
-			for _, link := range newLinkTable {
-				edge := cy.Edge{
-					Data: cy.EdgeData{
-						ID:     fmt.Sprintf("%s:%s_%s", newNodeMap[link.localRouterID].nodeName, newNodeMap[link.remoteRouterID].nodeName, strconv.FormatInt(int64(link.srAdjacencySid), 10)),
-						Source: newNodeMap[link.localRouterID].nodeName,
-						Target: newNodeMap[link.remoteRouterID].nodeName,
-						Attributes: map[string]interface{}{
-							"adjacency_sid": strconv.FormatInt(int64(link.srAdjacencySid), 10),
-							"igp_metric":    strconv.FormatInt(int64(link.igpMetric), 10),
-						},
-					},
-					Selectable: true,
-				}
-				elements.Edges = append(elements.Edges, edge)
-			}
+			elements := buildTopology(newNodeMap, newLinkTable, cfg)
 			store.Set(elements)
 		}
 	}
+}
+
+// buildTopology constructs cytoscape Elements from parsed BGP-LS data.
+func buildTopology(
+	nodeMap map[string]nodeNLRI,
+	linkTable []linkNLRI,
+	cfg *config.Conf,
+) cy.Elements {
+	elements := cy.Elements{
+		Nodes: make([]cy.Node, 0),
+		Edges: make([]cy.Edge, 0),
+	}
+	nodeGroups := []string{}
+	for _, val := range nodeMap {
+		nodeGroup := "noGroup"
+		if cfg.GroupSplitChar != "" {
+			nodeParts := strings.Split(val.nodeName, cfg.GroupSplitChar)
+			nodeGroup = nodeParts[cfg.GroupSplitIndex]
+			if _, found := config.FindInArray(nodeGroup, nodeGroups); !found {
+				nodeGroups = append(nodeGroups, nodeGroup)
+			}
+		} else {
+			nodeGroups = []string{"NoGroup"}
+		}
+		nodeGroupIndex, _ := config.FindInArray(nodeGroup, nodeGroups)
+		node := cy.Node{
+			Data: cy.NodeData{
+				ID: val.nodeName,
+				Attributes: map[string]interface{}{
+					"label":   val.nodeName,
+					"group":   nodeGroup,
+					"cluster": nodeGroupIndex,
+				},
+			},
+			Selectable: true,
+		}
+		elements.Nodes = append(elements.Nodes, node)
+	}
+	for _, link := range linkTable {
+		edge := cy.Edge{
+			Data: cy.EdgeData{
+				ID:     fmt.Sprintf("%s:%s_%s", nodeMap[link.localRouterID].nodeName, nodeMap[link.remoteRouterID].nodeName, strconv.FormatInt(int64(link.srAdjacencySid), 10)),
+				Source: nodeMap[link.localRouterID].nodeName,
+				Target: nodeMap[link.remoteRouterID].nodeName,
+				Attributes: map[string]interface{}{
+					"adjacency_sid": strconv.FormatInt(int64(link.srAdjacencySid), 10),
+					"igp_metric":    strconv.FormatInt(int64(link.igpMetric), 10),
+				},
+			},
+			Selectable: true,
+		}
+		elements.Edges = append(elements.Edges, edge)
+	}
+	return elements
 }
