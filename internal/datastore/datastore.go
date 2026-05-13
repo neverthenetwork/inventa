@@ -23,11 +23,18 @@ func NewTopologyStore() *TopologyStore {
 	}
 }
 
-// Get returns a copy of the current elements (safe for concurrent reads).
+// Get returns a deep copy of the current elements, safe for the caller
+// to mutate without affecting shared state.
 func (ts *TopologyStore) Get() cy.Elements {
 	ts.mu.RLock()
 	defer ts.mu.RUnlock()
-	return ts.elements
+
+	nodes := make([]cy.Node, len(ts.elements.Nodes))
+	copy(nodes, ts.elements.Nodes)
+	edges := make([]cy.Edge, len(ts.elements.Edges))
+	copy(edges, ts.elements.Edges)
+
+	return cy.Elements{Nodes: nodes, Edges: edges}
 }
 
 // Set replaces the elements atomically.
@@ -43,7 +50,11 @@ func (ts *TopologyStore) GetNodeName(nodeID string) string {
 	defer ts.mu.RUnlock()
 	for _, n := range ts.elements.Nodes {
 		if n.Data.ID == nodeID {
-			return n.Data.Attributes["label"].(string)
+			name, ok := n.Data.Attributes["label"].(string)
+			if !ok {
+				return ""
+			}
+			return name
 		}
 	}
 	return ""
