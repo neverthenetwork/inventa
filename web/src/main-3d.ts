@@ -2,6 +2,7 @@
  * Entry point for the 3D force-graph view (3dindex.html).
  */
 
+import './style.css';
 import ForceGraph3D from '3d-force-graph';
 import { fetchGraphData, configureGraph } from './3d-graph';
 

@@ -2,6 +2,7 @@
  * Entry point for the VR force-graph view (vrindex.html).
  */
 
+import './style.css';
 import ForceGraphVR from '3d-force-graph-vr';
 import { fetchGraphData, configureGraph } from './3d-graph';
 

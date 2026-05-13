@@ -18,6 +18,8 @@ async function renderGraph(): Promise<void> {
 
   const srcSelect = document.getElementById('src_select') as HTMLSelectElement | null;
   const dstSelect = document.getElementById('dst_select') as HTMLSelectElement | null;
+  const statusText = document.getElementById('status_text');
+  const nodeCount = document.getElementById('node_count');
 
   const src = srcSelect?.value ?? '';
   const dst = dstSelect?.value ?? '';
@@ -39,8 +41,21 @@ async function renderGraph(): Promise<void> {
     }
 
     cy = createGraph(container, filtered);
+
+    // Update status bar
+    if (nodeCount) {
+      nodeCount.textContent = `${filtered.nodes.length} nodes · ${filtered.edges.length} edges`;
+    }
+    if (statusText) {
+      statusText.textContent = src && dst
+        ? `Path: ${src} → ${dst}`
+        : 'All topology';
+    }
   } catch (err) {
     console.error('Failed to render graph:', err);
+    if (statusText) {
+      statusText.textContent = '⚠ Failed to load topology';
+    }
   }
 }
 
@@ -51,13 +66,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Wire up the Update button
   const updateBtn = document.getElementById('update_btn');
-  const patternsTa = document.getElementById(
-    'include_patterns',
-  ) as HTMLTextAreaElement | null;
 
-  if (updateBtn && patternsTa) {
+  if (updateBtn) {
     updateBtn.addEventListener('click', () => {
       renderGraph();
+    });
+  }
+
+  // Mobile menu toggle
+  const menuToggle = document.getElementById('menu_toggle');
+  const sidebar = document.getElementById('sidebar');
+
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', () => {
+      const open = sidebar.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
     });
   }
 });

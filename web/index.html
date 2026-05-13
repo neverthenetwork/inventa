@@ -3,26 +3,51 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Graph-O-Matic</title>
+  <title>Inventa — Network Topology</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inventa agentic network observability — topology, SPF, BGP-LS">
 </head>
 
 <body>
-  <h1>Graph-O-Matic</h1>
+  <header class="site-header">
+    <button class="menu-toggle" id="menu_toggle" aria-label="Toggle sidebar" aria-expanded="false">
+      ☰
+    </button>
+    <span class="site-title">Inventa</span>
+    <span class="site-badge">Topology</span>
+  </header>
 
-  <div class="flex-container">
-    <div class="menu" id="details">
-      <textarea id="include_patterns" rows="5" cols="25"></textarea>
-      <button type="button" id="update_btn">Update</button>
-      <select id="src_select">
-        <option value="">None</option>
-      </select>
-      <select id="dst_select">
-        <option value="">None</option>
-      </select>
-    </div>
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="control-group">
+        <label class="control-label" for="include_patterns">Filter Patterns</label>
+        <textarea id="include_patterns" rows="5" placeholder="One pattern per line..."></textarea>
+      </div>
 
-    <div class="cy" id="cy"></div>
+      <button type="button" class="btn" id="update_btn">Update Graph</button>
+
+      <div class="control-group">
+        <label class="control-label" for="src_select">Source</label>
+        <select id="src_select">
+          <option value="">None</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="dst_select">Destination</label>
+        <select id="dst_select">
+          <option value="">None</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="graph-pane">
+      <div id="cy"></div>
+      <div class="status-bar" id="status_bar">
+        <span id="status_text"></span>
+        <span id="node_count"></span>
+      </div>
+    </main>
   </div>
 
   <script type="module" src="/src/main.ts"></script>
