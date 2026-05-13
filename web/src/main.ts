@@ -2,6 +2,7 @@
  * Entry point for the 2D cytoscape view (index.html).
  */
 
+import './style.css';
 import { fetchElementData, filterByShow } from './element-data';
 import { createGraph } from './graph-renderer';
 import { updateDropdowns } from './path-filter';
