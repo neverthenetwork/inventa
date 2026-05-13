@@ -186,19 +186,15 @@ func TestJsHandler_withSrcDst(t *testing.T) {
 	}
 
 	hasTrue := false
-	hasFalse := false
 	for _, n := range elements.Nodes {
 		show, _ := n.Data.Attributes["show"].(bool)
 		if show {
 			hasTrue = true
-		} else {
-			hasFalse = true
 		}
 	}
 	if !hasTrue {
 		t.Error("expected at least one node with show=true for path")
 	}
-	_ = hasFalse
 }
 
 func TestJsHandler_badSrcDst(t *testing.T) {
