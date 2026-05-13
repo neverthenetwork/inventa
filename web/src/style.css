@@ -8,6 +8,8 @@
   --color-text-muted: #94a3b8;
   --color-accent:     #2dd4bf;
   --color-accent-dim: #0d9488;
+  --color-accent-rgb: 45, 212, 191;
+  --color-bg-rgb:     15, 23, 41;
   --color-node:       #ea8a31;
   --color-edge:       #fcc694;
   --color-danger:     #f87171;
@@ -160,12 +162,12 @@ input[type='text']:hover {
   border-color: var(--color-text-muted);
 }
 
-select:focus,
-textarea:focus,
-input[type='text']:focus {
+select:focus-visible,
+textarea:focus-visible,
+input[type='text']:focus-visible {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
+  box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.2);
 }
 
 textarea {
@@ -178,7 +180,7 @@ textarea {
   font-size: var(--text-sm);
   font-weight: 500;
   background: var(--color-accent-dim);
-  color: var(--color-text);
+  color: #0f1729;
   border: none;
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-4);
@@ -219,7 +221,7 @@ textarea {
   left: 0;
   right: 0;
   padding: var(--space-1) var(--space-3);
-  background: rgba(15, 23, 41, 0.85);
+  background: rgba(var(--color-bg-rgb), 0.85);
   backdrop-filter: blur(8px);
   border-top: 1px solid var(--color-border);
   font-size: var(--text-xs);
