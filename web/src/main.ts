@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (updateBtn && patternsTa) {
     updateBtn.addEventListener('click', () => {
-      renderGraph(patternsTa.value);
+      renderGraph();
     });
   }
 });
