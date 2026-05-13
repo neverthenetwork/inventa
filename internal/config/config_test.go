@@ -3,6 +3,7 @@ package config
 import (
 	"log/slog"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -33,6 +34,21 @@ func TestLoadConfigMissing(t *testing.T) {
 	}
 }
 
+func TestLoadConfigInvalidYAML(t *testing.T) {
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
+
+	dir := t.TempDir()
+	badPath := filepath.Join(dir, "bad.yaml")
+	if err := os.WriteFile(badPath, []byte("this: [is not valid: yaml\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := LoadConfig(badPath, logger)
+	if err == nil {
+		t.Error("expected error for invalid YAML")
+	}
+}
+
 func TestStripUnwanted(t *testing.T) {
 	cfg := &Conf{
 		NodeNameStripPatterns: []string{`re0\.`},
@@ -46,10 +62,67 @@ func TestStripUnwanted(t *testing.T) {
 		{"regex no match", "re0-test", "re0-test"},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(_ *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			if got := cfg.StripUnwanted(tt.arg); got != tt.want {
 				t.Errorf("StripUnwanted() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestStripUnwanted_multiplePatterns(t *testing.T) {
+	cfg := &Conf{
+		NodeNameStripPatterns: []string{`^area-`, `\.old$`},
+	}
+	result := cfg.StripUnwanted("area-core.old")
+	if result != "core" {
+		t.Errorf("expected 'core', got %q", result)
+	}
+}
+
+func TestStripUnwanted_invalidRegex(t *testing.T) {
+	cfg := &Conf{
+		NodeNameStripPatterns: []string{`[invalid`, `valid`},
+	}
+	// Invalid regex is skipped; only valid patterns apply
+	result := cfg.StripUnwanted("test_valid")
+	if result != "test_" {
+		t.Errorf("expected 'test_' after valid pattern stripped, got %q", result)
+	}
+}
+
+func TestStripUnwanted_emptyPatterns(t *testing.T) {
+	cfg := &Conf{
+		NodeNameStripPatterns: nil,
+	}
+	result := cfg.StripUnwanted("unchanged")
+	if result != "unchanged" {
+		t.Errorf("expected 'unchanged', got %q", result)
+	}
+}
+
+func TestFindInArray_found(t *testing.T) {
+	arr := []string{"a", "b", "c"}
+	idx, found := FindInArray("b", arr)
+	if !found {
+		t.Error("expected to find 'b'")
+	}
+	if idx != 1 {
+		t.Errorf("expected index 1, got %d", idx)
+	}
+}
+
+func TestFindInArray_notFound(t *testing.T) {
+	arr := []string{"a", "b", "c"}
+	_, found := FindInArray("x", arr)
+	if found {
+		t.Error("expected 'x' not found")
+	}
+}
+
+func TestFindInArray_empty(t *testing.T) {
+	_, found := FindInArray("a", nil)
+	if found {
+		t.Error("expected not found in nil slice")
 	}
 }
