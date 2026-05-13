@@ -1,14 +1,15 @@
 package config
 
 import (
+	"fmt"
+	"log/slog"
 	"os"
 	"regexp"
 
-	"github.com/neverthenetwork/inventa/internal/logging"
 	"gopkg.in/yaml.v3"
 )
 
-// Conf holds configuration information
+// Conf holds configuration information.
 type Conf struct {
 	LocalJSONFile         string   `yaml:"local_json_file"`
 	LocalRouterID         string   `yaml:"local_router_id"`
@@ -24,10 +25,7 @@ type Conf struct {
 	GroupSplitIndex       int      `yaml:"group_split_index" default:"0"`
 }
 
-// Configs is our shared config object
-var Configs Conf
-
-// FindInArray finds an element in an array
+// FindInArray returns the index of what in where, and whether it was found.
 func FindInArray(what string, where []string) (idx int, found bool) {
 	for i, v := range where {
 		if v == what {
@@ -37,24 +35,26 @@ func FindInArray(what string, where []string) (idx int, found bool) {
 	return 0, false
 }
 
-// InitConfig initializes the configuration object
-func InitConfig(fileName string) {
+// LoadConfig loads and returns the configuration from a YAML file.
+func LoadConfig(fileName string, logger *slog.Logger) (*Conf, error) {
 	yamlFile, err := os.ReadFile(fileName)
 	if err != nil {
-		logging.Log.Fatal(err)
+		return nil, fmt.Errorf("reading config file %s: %w", fileName, err)
 	}
-	err = yaml.Unmarshal(yamlFile, &Configs)
-	if err != nil {
-		logging.Log.Fatal(err)
+	var cfg Conf
+	if err := yaml.Unmarshal(yamlFile, &cfg); err != nil {
+		return nil, fmt.Errorf("parsing config: %w", err)
 	}
+	logger.Info("config loaded", "file", fileName)
+	return &cfg, nil
 }
 
-// StripUnwanted removes any substrings from our name string
-func StripUnwanted(name string) string {
-	for _, pattern := range Configs.NodeNameStripPatterns {
+// StripUnwanted removes configured patterns from a node name.
+func (c *Conf) StripUnwanted(name string) string {
+	for _, pattern := range c.NodeNameStripPatterns {
 		re, err := regexp.Compile(pattern)
 		if err != nil {
-			logging.Log.Fatal(err)
+			continue // skip invalid patterns
 		}
 		name = re.ReplaceAllString(name, "")
 	}

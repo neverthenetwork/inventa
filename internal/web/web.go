@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
+	"log/slog"
 	"net/http"
 
 	"github.com/neverthenetwork/inventa/internal/config"
@@ -13,13 +14,17 @@ import (
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
 )
 
-// StaticFS holds the embedded static files.
-// Set by main before the HTTP server starts.
-var StaticFS fs.FS
+// Server handles HTTP requests for the web UI.
+type Server struct {
+	StaticFS fs.FS
+	Store    *datastore.TopologyStore
+	Cfg      *config.Conf
+	Logger   *slog.Logger
+}
 
 // IndexHandler serves the 2D cytoscape view.
-func IndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := fs.ReadFile(StaticFS, "static/index.html")
+func (s *Server) IndexHandler(w http.ResponseWriter, _ *http.Request) {
+	content, err := fs.ReadFile(s.StaticFS, "static/index.html")
 	if err != nil {
 		http.Error(w, "index not found", http.StatusInternalServerError)
 		return
@@ -29,8 +34,8 @@ func IndexHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 // VRIndexHandler serves the VR 3D force graph view.
-func VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := fs.ReadFile(StaticFS, "static/vrindex.html")
+func (s *Server) VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
+	content, err := fs.ReadFile(s.StaticFS, "static/vrindex.html")
 	if err != nil {
 		http.Error(w, "VR view not found", http.StatusInternalServerError)
 		return
@@ -40,8 +45,8 @@ func VRIndexHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 // ThreeDIndexHandler serves the 3D force graph view.
-func ThreeDIndexHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := fs.ReadFile(StaticFS, "static/3dindex.html")
+func (s *Server) ThreeDIndexHandler(w http.ResponseWriter, _ *http.Request) {
+	content, err := fs.ReadFile(s.StaticFS, "static/3dindex.html")
 	if err != nil {
 		http.Error(w, "3D view not found", http.StatusInternalServerError)
 		return
@@ -50,15 +55,17 @@ func ThreeDIndexHandler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprint(w, string(content))
 }
 
-// JsHandler returns topology data as JSON for the Cytoscape visualisation.
-func JsHandler(w http.ResponseWriter, r *http.Request) {
+// JsHandler returns topology data as JSON for Cytoscape.
+func (s *Server) JsHandler(w http.ResponseWriter, r *http.Request) {
 	var includeList []string
 	var pathPairs []spf.PathSegment
 	src := r.URL.Query().Get("src")
 	dst := r.URL.Query().Get("dst")
 	w.Header().Set("Content-Type", "application/json")
+
 	if src != "" && dst != "" {
-		bestPathNames, err := spf.GetBestPathNames(datastore.Elements, src, dst)
+		elements := s.Store.Get()
+		bestPathNames, err := spf.GetBestPathNames(elements, src, dst, s.Logger)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("path computation error: %v", err), http.StatusInternalServerError)
 			return
@@ -66,14 +73,16 @@ func JsHandler(w http.ResponseWriter, r *http.Request) {
 		pathPairs = spf.GetPathSegments(bestPathNames)
 		includeList = collapsePathPairs(pathPairs)
 	}
+
+	elements := s.Store.Get()
 	filteredElements := cy.Elements{
 		Nodes: make([]cy.Node, 0),
 		Edges: make([]cy.Edge, 0),
 	}
-	filteredElements.Nodes = filterNodes(datastore.Elements.Nodes, includeList)
-	filteredElements.Edges = filterEdges(datastore.Elements.Edges, pathPairs)
+	filteredElements.Nodes = filterNodes(elements.Nodes, includeList)
+	filteredElements.Edges = filterEdges(elements.Edges, pathPairs)
 	if err := json.NewEncoder(w).Encode(filteredElements); err != nil {
-		fmt.Printf("%s\n", err)
+		s.Logger.Error("encoding json response", "error", err)
 	}
 }
 
