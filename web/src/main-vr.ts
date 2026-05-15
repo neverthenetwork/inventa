@@ -3,6 +3,7 @@
  */
 
 import './style.css';
+import 'aframe'; // sets window.AFRAME — required by 3d-force-graph-vr
 import ForceGraphVR from '3d-force-graph-vr';
 import { fetchGraphData, configureGraph } from './3d-graph';
 
