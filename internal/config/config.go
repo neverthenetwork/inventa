@@ -33,8 +33,9 @@ type LocalJSONSourceConfig struct {
 type AWSSourceConfig struct {
 	SourceConfig `yaml:",inline"`
 	Regions      []string `yaml:"regions"`
-	Profile      string   `yaml:"profile"`  // AWS profile name (optional)
-	RoleARN      string   `yaml:"role_arn"` // IAM role to assume (optional)
+	Profile      string   `yaml:"profile"`        // AWS profile name (optional)
+	RoleARN      string   `yaml:"role_arn"`       // IAM role to assume (optional)
+	EndpointURL  string   `yaml:"endpoint_url"`   // Custom endpoint (e.g. Floci/LocalStack)
 	PollInterval int      `yaml:"poll_interval_seconds" default:"300"`
 }
 

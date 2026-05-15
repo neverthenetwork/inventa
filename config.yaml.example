@@ -21,6 +21,7 @@ sources:
 
   # ── AWS: Discover VPCs, subnets, transit gateways, peering, VPN ──
   # Requires AWS credentials (env vars, ~/.aws/credentials, or IAM role).
+  # For local development, set endpoint_url to a Floci or LocalStack instance.
   # IAM permissions needed (read-only):
   #   ec2:DescribeVpcs, ec2:DescribeSubnets, ec2:DescribeTransitGateways,
   #   ec2:DescribeTransitGatewayAttachments, ec2:DescribeVpcPeeringConnections,
@@ -33,6 +34,7 @@ sources:
       - us-east-1
     # profile: "my-aws-profile"      # Optional: AWS named profile
     # role_arn: "arn:aws:iam::..."   # Optional: IAM role to assume
+    # endpoint_url: "http://localhost:4566"  # Optional: local emulator
     poll_interval_seconds: 300       # How often to refresh topology
 
 # ── Web Server ─────────────────────────────────────────────────

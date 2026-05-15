@@ -1,0 +1,13 @@
+# ── Inventa Demo Configuration ──────────────────────────────────
+# Uses Floci (local AWS emulator) as the data source.
+# Start with: docker compose up
+
+sources:
+  aws:
+    enabled: true
+    regions:
+      - us-east-1
+    endpoint_url: "http://floci:4566"
+    poll_interval_seconds: 30
+
+http_listen_port: 8081

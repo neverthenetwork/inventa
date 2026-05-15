@@ -1,0 +1,36 @@
+# ── Inventa + Floci Demo Stack ──────────────────────────────────
+# Canned demo: AWS topology visualization in one command.
+#
+#   docker compose up --build
+#   open http://localhost:8081
+#
+# Floci seeds a default VPC with subnets, internet gateway, and
+# security group automatically. Inventa discovers it and shows
+# the topology in the browser.
+
+services:
+  # Local AWS emulator — seeds default VPC resources on startup
+  floci:
+    image: floci/floci:latest
+    environment:
+      - FLOCI_DEFAULT_REGION=us-east-1
+      - FLOCI_SERVICES_EC2_MOCK=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:4566/"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 1s
+
+  # Inventa — discovers AWS topology from Floci and serves the web UI
+  inventa:
+    build: .
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./demo/config.yaml:/etc/inventa/config.yaml:ro
+    depends_on:
+      floci:
+        condition: service_healthy

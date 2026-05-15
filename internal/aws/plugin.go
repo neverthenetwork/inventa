@@ -40,6 +40,26 @@ func New(cfg *config.Conf, logger *slog.Logger) (*Plugin, error) {
 		loadOpts = append(loadOpts, awsconfig.WithSharedConfigProfile(awscfg.Profile))
 	}
 
+	// Custom endpoint URL (e.g. Floci, LocalStack)
+	if awscfg.EndpointURL != "" {
+		resolver := aws.EndpointResolverWithOptionsFunc(
+			func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+				return aws.Endpoint{
+					PartitionID:   "aws",
+					URL:           awscfg.EndpointURL,
+					SigningRegion: region,
+				}, nil
+			},
+		)
+		loadOpts = append(loadOpts, awsconfig.WithEndpointResolverWithOptions(resolver))
+		// Use anonymous credentials for local emulators
+		loadOpts = append(loadOpts, func(o *awsconfig.LoadOptions) error {
+			o.Credentials = aws.AnonymousCredentials{}
+			return nil
+		})
+		logger.Info("aws plugin: using custom endpoint", "url", awscfg.EndpointURL)
+	}
+
 	sdkCfg, err := awsconfig.LoadDefaultConfig(context.Background(), loadOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("loading AWS config: %w", err)
