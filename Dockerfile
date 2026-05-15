@@ -3,8 +3,10 @@ FROM node:22-alpine AS frontend
 WORKDIR /app/web
 COPY web/package.json web/package-lock.json ./
 
-# Rewrite SSH git URLs to HTTPS (for public repos like dmarcos/three-bmfont-text)
-RUN git config --global url."https://github.com/".insteadOf "git@github.com:" && \
+# Install git (needed for npm dependencies that pull from git repos)
+# and rewrite SSH git URLs to HTTPS for public repos like dmarcos/three-bmfont-text
+RUN apk add --no-cache git && \
+    git config --global url."https://github.com/".insteadOf "git@github.com:" && \
     git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
 
 RUN npm ci
