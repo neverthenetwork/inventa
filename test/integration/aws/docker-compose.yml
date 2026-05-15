@@ -1,0 +1,18 @@
+# Floci — local AWS emulator for integration testing
+# Used by internal/aws/aws_integration_test.go
+# Start with: docker compose -f test/integration/aws/docker-compose.yml up -d
+
+services:
+  floci:
+    image: floci/floci:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - FLOCI_DEFAULT_REGION=us-east-1
+      - FLOCI_SERVICES_EC2_MOCK=true  # Skip real Docker containers for faster tests
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - floci_data:/app/data
+
+volumes:
+  floci_data:
