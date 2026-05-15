@@ -22,7 +22,7 @@ import (
 	"github.com/neverthenetwork/inventa/internal/web"
 )
 
-//go:embed web-dist/*
+//go:embed all:web-dist
 var webDist embed.FS
 
 func main() {
@@ -74,15 +74,15 @@ func main() {
 		Logger:   logger,
 	}
 
-	// Serve static files from embedded Vite build output
+	// Serve static files from embedded Vite build output at /
+	// http.FileServer serves index.html for / and all assets with correct MIME types
 	distFS, err := fs.Sub(webDist, "web-dist")
 	if err != nil {
 		logger.Error("failed to create dist sub-filesystem", "error", err)
 		os.Exit(1)
 	}
 	fileServer := http.FileServer(http.FS(distFS))
-	http.Handle("/resources/", http.StripPrefix("/resources", fileServer))
-	http.HandleFunc("/", webSrv.IndexHandler)
+	http.Handle("/", fileServer)
 	http.HandleFunc("/vr", webSrv.VRIndexHandler)
 	http.HandleFunc("/3d", webSrv.ThreeDIndexHandler)
 	http.HandleFunc("/elementdata.json", webSrv.JsHandler)
