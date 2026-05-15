@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"log/slog"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/neverthenetwork/inventa/internal/config"
 	"github.com/neverthenetwork/inventa/internal/datastore"
+	"github.com/neverthenetwork/inventa/internal/localjson"
 	"github.com/neverthenetwork/inventa/internal/web"
 
 	cy "gonum.org/v1/gonum/graph/formats/cytoscapejs"
@@ -143,7 +145,7 @@ func TestIntegration_elementdataEndpoint(t *testing.T) {
 	}
 }
 
-func TestLoadJSON(t *testing.T) {
+func TestLocalJSONPlugin(t *testing.T) {
 	dir := t.TempDir()
 	jsonPath := dir + "/topology.json"
 
@@ -152,9 +154,12 @@ func TestLoadJSON(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	cfg := &config.Conf{LocalJSONFile: jsonPath}
+	plugin := localjson.New(cfg, testLogger)
+
 	store := datastore.NewTopologyStore()
-	if err := loadJSON(jsonPath, store); err != nil {
-		t.Fatalf("loadJSON() error = %v", err)
+	if err := plugin.Start(context.Background(), store); err != nil {
+		t.Fatalf("Start() error = %v", err)
 	}
 
 	if store.NodeCount() != 1 {
@@ -167,9 +172,12 @@ func TestLoadJSON(t *testing.T) {
 	}
 }
 
-func TestLoadJSON_missing(t *testing.T) {
+func TestLocalJSONPlugin_missing(t *testing.T) {
+	cfg := &config.Conf{LocalJSONFile: "/nonexistent/file.json"}
+	plugin := localjson.New(cfg, testLogger)
+
 	store := datastore.NewTopologyStore()
-	if err := loadJSON("/nonexistent/file.json", store); err == nil {
+	if err := plugin.Start(context.Background(), store); err == nil {
 		t.Error("expected error for missing file")
 	}
 }
