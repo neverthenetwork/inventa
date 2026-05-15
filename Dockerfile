@@ -19,6 +19,9 @@ COPY . .
 COPY --from=frontend /app/cmd/inventa/web-dist ./cmd/inventa/web-dist
 RUN CGO_ENABLED=0 go build -v -o /usr/local/bin/inventa ./cmd/inventa/
 
+# Create the config directory (cannot use RUN in distroless — ship as file)
+RUN mkdir -p /etc/inventa && touch /etc/inventa/.config-dir
+
 # Runtime stage
 FROM gcr.io/distroless/static-debian12:nonroot
 WORKDIR /app
@@ -26,8 +29,8 @@ WORKDIR /app
 # Copy binary
 COPY --from=builder /usr/local/bin/inventa /usr/local/bin/inventa
 
-# Create config directory for mounted config
-RUN mkdir -p /etc/inventa
+# Copy pre-created config directory
+COPY --from=builder --chown=nonroot:nonroot /etc/inventa /etc/inventa
 
 # Expose the HTTP port (config default is 8081)
 EXPOSE 8081
