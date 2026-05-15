@@ -14,6 +14,7 @@
   "dependencies": {
     "3d-force-graph": "^1.73.0",
     "3d-force-graph-vr": "^3.1.0",
+    "aframe": "^1.7.1",
     "cytoscape": "^3.30.0",
     "cytoscape-cise": "^2.0.0"
   },

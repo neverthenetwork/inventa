@@ -1,22 +1,57 @@
 ---
 
-local_router_id: "1.1.1.1"
-local_asn: 65533
-peer_ipv4_address: "1.1.1.2"
-peer_asn: 65533 # Same as above, it's iBGP
-http_listen_port: 8081
-#https_enable: true # needed for VR
-https_cert_file: "/path/to/cert.pem"
-https_key_file: "/path/to/key.pem"
+# ── Topology Sources ─────────────────────────────────────────────
+# Enable one or more sources below. At least one source must be enabled.
 
-node_name_strip_patterns: # If you want to strip parts from names you can.
+sources:
+
+  # ── BGP-LS: Discover topology from a BGP Link-State peer ──
+  bgpls:
+    enabled: false
+    local_router_id: "1.1.1.1"
+    local_asn: 65533
+    peer_ipv4_address: "1.1.1.2"
+    peer_asn: 65533           # Typically same as local_asn for iBGP
+
+  # ── Local JSON: Load a static topology from a JSON file ──
+  # JSON format: cytoscape.js Elements — {"nodes": [...], "edges": [...]}
+  localjson:
+    enabled: false
+    file: "/path/to/topology.json"
+
+  # ── AWS: Discover VPCs, subnets, transit gateways, peering, VPN ──
+  # Requires AWS credentials (env vars, ~/.aws/credentials, or IAM role).
+  # For local development, set endpoint_url to a Floci or LocalStack instance.
+  # IAM permissions needed (read-only):
+  #   ec2:DescribeVpcs, ec2:DescribeSubnets, ec2:DescribeTransitGateways,
+  #   ec2:DescribeTransitGatewayAttachments, ec2:DescribeVpcPeeringConnections,
+  #   ec2:DescribeInternetGateways, ec2:DescribeNatGateways,
+  #   ec2:DescribeVpnGateways
+  aws:
+    enabled: false
+    regions:
+      - ap-southeast-2
+      - us-east-1
+    # profile: "my-aws-profile"      # Optional: AWS named profile
+    # role_arn: "arn:aws:iam::..."   # Optional: IAM role to assume
+    # endpoint_url: "http://localhost:4566"  # Optional: local emulator
+    poll_interval_seconds: 300       # How often to refresh topology
+
+# ── Web Server ─────────────────────────────────────────────────
+
+http_listen_port: 8081
+# https_enable: true               # Required for VR mode
+# https_cert_file: "/path/to/cert.pem"
+# https_key_file: "/path/to/key.pem"
+
+# ── Node Display ───────────────────────────────────────────────
+
+# Strip patterns from node names (regex):
+node_name_strip_patterns:
   - "re0."
 
-# The visualiser uses groups for nodes 
-# This will split the node name on a character
-# and return the array index for the group name
-#
-# Example: "router.london.company.net" becomes
-# Group: "london" with the following config.
-#group_split_char: "."
-#group_split_index: 1
+# Group nodes by splitting the name on a character.
+# Example: "router.london.company.net" with split_char "." and
+# split_index 1 → group "london".
+# group_split_char: "."
+# group_split_index: 1
