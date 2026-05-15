@@ -13,4 +13,9 @@ export default defineConfig({
       },
     },
   },
+  resolve: {
+    // Three.js is pulled by aframe (as super-three), 3d-force-graph, and
+    // aframe-extras — dedupe ensures a single instance so instanceof checks pass.
+    dedupe: ['three'],
+  },
 });
