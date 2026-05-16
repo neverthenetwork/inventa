@@ -298,9 +298,9 @@ func buildTopology(
 		})
 		elements.Edges = append(elements.Edges, cy.Edge{
 			Data: cy.EdgeData{
-				ID:     fmt.Sprintf("%s_parent_%s", id, vpcID),
-				Source: id,
-				Target: vpcID,
+				ID:         fmt.Sprintf("%s_parent_%s", id, vpcID),
+				Source:     id,
+				Target:     vpcID,
 				Attributes: map[string]any{"type": "parent"},
 			},
 			Selectable: true,
@@ -333,9 +333,9 @@ func buildTopology(
 		if subnetID != "" {
 			elements.Edges = append(elements.Edges, cy.Edge{
 				Data: cy.EdgeData{
-					ID:     fmt.Sprintf("%s_parent_%s", id, subnetID),
-					Source: id,
-					Target: subnetID,
+					ID:         fmt.Sprintf("%s_parent_%s", id, subnetID),
+					Source:     id,
+					Target:     subnetID,
 					Attributes: map[string]any{"type": "parent"},
 				},
 				Selectable: true,
@@ -343,14 +343,16 @@ func buildTopology(
 		}
 		for _, sgID := range instanceSGs[id] {
 			sgName := sgIDToName[sgID]
-			if sgName == "" { sgName = sgID }
+			if sgName == "" {
+				sgName = sgID
+			}
 			elements.Edges = append(elements.Edges, cy.Edge{
 				Data: cy.EdgeData{
 					ID:     fmt.Sprintf("%s_member_%s", id, sgID),
 					Source: id,
 					Target: sgID,
 					Attributes: map[string]any{
-						"type": "member",
+						"type":      "member",
 						"groupName": sgName,
 					},
 				},
@@ -378,9 +380,9 @@ func buildTopology(
 		})
 		elements.Edges = append(elements.Edges, cy.Edge{
 			Data: cy.EdgeData{
-				ID:     fmt.Sprintf("%s_parent_%s", id, vpcID),
-				Source: id,
-				Target: vpcID,
+				ID:         fmt.Sprintf("%s_parent_%s", id, vpcID),
+				Source:     id,
+				Target:     vpcID,
 				Attributes: map[string]any{"type": "parent"},
 			},
 			Selectable: true,
@@ -412,9 +414,9 @@ func buildTopology(
 		if vpcID != "" {
 			elements.Edges = append(elements.Edges, cy.Edge{
 				Data: cy.EdgeData{
-					ID:     fmt.Sprintf("%s_attach_%s", id, vpcID),
-					Source: id,
-					Target: vpcID,
+					ID:         fmt.Sprintf("%s_attach_%s", id, vpcID),
+					Source:     id,
+					Target:     vpcID,
 					Attributes: map[string]any{"type": "attached"},
 				},
 				Selectable: true,
@@ -480,9 +482,9 @@ func buildTopology(
 			}
 			elements.Edges = append(elements.Edges, cy.Edge{
 				Data: cy.EdgeData{
-					ID:     fmt.Sprintf("%s_subnet_%s", nodeID, sid),
-					Source: nodeID,
-					Target: sid,
+					ID:         fmt.Sprintf("%s_subnet_%s", nodeID, sid),
+					Source:     nodeID,
+					Target:     sid,
 					Attributes: map[string]any{"type": "lb-subnet"},
 				},
 				Selectable: true,
@@ -491,9 +493,9 @@ func buildTopology(
 		if vpcID != "" {
 			elements.Edges = append(elements.Edges, cy.Edge{
 				Data: cy.EdgeData{
-					ID:     fmt.Sprintf("%s_parent_%s", nodeID, vpcID),
-					Source: nodeID,
-					Target: vpcID,
+					ID:         fmt.Sprintf("%s_parent_%s", nodeID, vpcID),
+					Source:     nodeID,
+					Target:     vpcID,
 					Attributes: map[string]any{"type": "parent"},
 				},
 				Selectable: true,
@@ -504,14 +506,16 @@ func buildTopology(
 	// ALB → Instance edges (via target groups)
 	for lbARN, tgARNs := range lbToTGs {
 		lbNodeID := lbARNToID[lbARN]
-		if lbNodeID == "" { continue }
+		if lbNodeID == "" {
+			continue
+		}
 		for _, tgARN := range tgARNs {
 			for _, instID := range tgToInstances[tgARN] {
 				elements.Edges = append(elements.Edges, cy.Edge{
 					Data: cy.EdgeData{
-						ID:     fmt.Sprintf("%s_target_%s", lbNodeID, instID),
-						Source: lbNodeID,
-						Target: instID,
+						ID:         fmt.Sprintf("%s_target_%s", lbNodeID, instID),
+						Source:     lbNodeID,
+						Target:     instID,
 						Attributes: map[string]any{"type": "target"},
 					},
 					Selectable: true,
@@ -543,13 +547,17 @@ func tagValue(tags []ec2types.Tag, key, fallback string) string {
 }
 
 func safeString(s *string) string {
-	if s == nil { return "" }
+	if s == nil {
+		return ""
+	}
 	return *s
 }
 
 func shortID(name, id string) string {
 	if name == id {
-		if len(id) > 12 { return id[:8] }
+		if len(id) > 12 {
+			return id[:8]
+		}
 		return id
 	}
 	return name
