@@ -524,6 +524,79 @@ func buildTopology(
 		}
 	}
 
+	// ── Internet egress (synthetic node) ──
+	// Only create the internet node if at least one egress edge exists.
+	hasInternet := false
+	for _, igw := range igws {
+		for _, att := range igw.Attachments {
+			if att.State == ec2types.AttachmentStatusAttached || att.State == "available" {
+				hasInternet = true
+				break
+			}
+		}
+		if hasInternet {
+			break
+		}
+	}
+	if !hasInternet {
+		for _, lb := range lbs {
+			if lb.Scheme == elbtypes.LoadBalancerSchemeEnumInternetFacing {
+				hasInternet = true
+				break
+			}
+		}
+	}
+
+	if hasInternet {
+		elements.Nodes = append(elements.Nodes, cy.Node{
+			Data: cy.NodeData{ID: "internet", Attributes: map[string]any{
+				"label": "Internet",
+				"group": "internet",
+			}},
+			Selectable: true,
+		})
+
+		// IGW → internet
+		for _, igw := range igws {
+			id := aws.ToString(igw.InternetGatewayId)
+			attached := false
+			for _, att := range igw.Attachments {
+				if att.State == ec2types.AttachmentStatusAttached || att.State == "available" {
+					attached = true
+					break
+				}
+			}
+			if attached {
+				elements.Edges = append(elements.Edges, cy.Edge{
+					Data: cy.EdgeData{
+						ID:         fmt.Sprintf("%s_egress_internet", id),
+						Source:     id,
+						Target:     "internet",
+						Attributes: map[string]any{"type": "egress"},
+					},
+					Selectable: true,
+				})
+			}
+		}
+
+		// internet-facing ALB → internet
+		for _, lb := range lbs {
+			if lb.Scheme != elbtypes.LoadBalancerSchemeEnumInternetFacing {
+				continue
+			}
+			nodeID := fmt.Sprintf("alb_%s", aws.ToString(lb.LoadBalancerName))
+			elements.Edges = append(elements.Edges, cy.Edge{
+				Data: cy.EdgeData{
+					ID:         fmt.Sprintf("%s_egress_internet", nodeID),
+					Source:     nodeID,
+					Target:     "internet",
+					Attributes: map[string]any{"type": "egress"},
+				},
+				Selectable: true,
+			})
+		}
+	}
+
 	// Sort for deterministic output
 	sort.Slice(elements.Nodes, func(i, j int) bool {
 		return elements.Nodes[i].Data.ID < elements.Nodes[j].Data.ID

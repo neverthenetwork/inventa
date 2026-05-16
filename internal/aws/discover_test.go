@@ -120,18 +120,22 @@ func TestBuildTopology_InternetGateway(t *testing.T) {
 		Attachments:       []ec2types.InternetGatewayAttachment{{State: ec2types.AttachmentStatusAttached, VpcId: aws.String("vpc-1")}},
 	}}
 	elements := buildTopology(vpcs, nil, nil, nil, igws, nil, nil, nil)
-	if len(elements.Nodes) != 2 {
-		t.Fatalf("expected 2 nodes, got %d", len(elements.Nodes))
+	// vpc + igw + internet = 3 nodes
+	if len(elements.Nodes) != 3 {
+		t.Fatalf("expected 3 nodes, got %d", len(elements.Nodes))
 	}
-	if len(elements.Edges) != 1 {
-		t.Fatalf("expected 1 edge, got %d", len(elements.Edges))
+	// igw→vpc attached + igw→internet egress = 2 edges
+	if len(elements.Edges) != 2 {
+		t.Fatalf("expected 2 edges, got %d", len(elements.Edges))
 	}
 
-	var igwNode *cy.Node
+	var igwNode, internetNode *cy.Node
 	for i := range elements.Nodes {
-		if elements.Nodes[i].Data.ID == "igw-abc" {
+		switch elements.Nodes[i].Data.ID {
+		case "igw-abc":
 			igwNode = &elements.Nodes[i]
-			break
+		case "internet":
+			internetNode = &elements.Nodes[i]
 		}
 	}
 	if igwNode == nil {
@@ -140,9 +144,24 @@ func TestBuildTopology_InternetGateway(t *testing.T) {
 	if igwNode.Data.Attributes["group"] != "igw" {
 		t.Errorf("IGW group = %q, want igw", igwNode.Data.Attributes["group"])
 	}
-	edge := elements.Edges[0]
-	if edge.Data.Source != "igw-abc" || edge.Data.Target != "vpc-1" {
-		t.Errorf("edge = %s→%s, want igw-abc→vpc-1", edge.Data.Source, edge.Data.Target)
+	if internetNode == nil {
+		t.Fatal("missing internet node")
+	}
+	// Should have attached edge + egress edge
+	foundAttached, foundEgress := false, false
+	for _, e := range elements.Edges {
+		if e.Data.Source == "igw-abc" && e.Data.Target == "vpc-1" && e.Data.Attributes["type"] == "attached" {
+			foundAttached = true
+		}
+		if e.Data.Source == "igw-abc" && e.Data.Target == "internet" && e.Data.Attributes["type"] == "egress" {
+			foundEgress = true
+		}
+	}
+	if !foundAttached {
+		t.Error("missing IGW→VPC attached edge")
+	}
+	if !foundEgress {
+		t.Error("missing IGW→internet egress edge")
 	}
 }
 
@@ -167,22 +186,28 @@ func TestBuildTopology_LoadBalancerWithTargets(t *testing.T) {
 	lbToTGs := map[string][]string{"arn:aws:elbv2:us-east-1:000000000000:loadbalancer/app/my-alb/abc123": {"arn:tg/my-tg"}}
 
 	elements := buildTopology(vpcs, subnets, instances, nil, nil, lbs, tgToInstances, lbToTGs)
-	if len(elements.Nodes) != 6 {
-		t.Fatalf("expected 6 nodes, got %d", len(elements.Nodes))
+	// 6 base nodes (vpc, 2 subnets, 2 instances, alb) + 1 internet node
+	if len(elements.Nodes) != 7 {
+		t.Fatalf("expected 7 nodes, got %d", len(elements.Nodes))
 	}
 
-	var albNode *cy.Node
+	var albNode, internetNode *cy.Node
 	for i := range elements.Nodes {
-		if elements.Nodes[i].Data.ID == "alb_my-alb" {
+		switch elements.Nodes[i].Data.ID {
+		case "alb_my-alb":
 			albNode = &elements.Nodes[i]
-			break
+		case "internet":
+			internetNode = &elements.Nodes[i]
 		}
 	}
 	if albNode == nil {
 		t.Fatal("missing ALB node")
 	}
+	if internetNode == nil {
+		t.Fatal("missing internet node for internet-facing ALB")
+	}
 
-	instanceEdges, subnetEdges := 0, 0
+	instanceEdges, subnetEdges, egressEdges := 0, 0, 0
 	for _, e := range elements.Edges {
 		if e.Data.Source == "alb_my-alb" {
 			switch e.Data.Attributes["type"] {
@@ -190,6 +215,8 @@ func TestBuildTopology_LoadBalancerWithTargets(t *testing.T) {
 				instanceEdges++
 			case "lb-subnet":
 				subnetEdges++
+			case "egress":
+				egressEdges++
 			}
 		}
 	}
@@ -198,6 +225,101 @@ func TestBuildTopology_LoadBalancerWithTargets(t *testing.T) {
 	}
 	if subnetEdges != 2 {
 		t.Errorf("expected 2 lb-subnet edges, got %d", subnetEdges)
+	}
+	if egressEdges != 1 {
+		t.Errorf("expected 1 ALB→internet egress edge, got %d", egressEdges)
+	}
+}
+
+func TestBuildTopology_InternetEgress(t *testing.T) {
+	// No internet node when no IGW and no internet-facing ALB
+	vpcs := []ec2types.Vpc{{VpcId: aws.String("vpc-1"), CidrBlock: aws.String("10.0.0.0/16")}}
+	elements := buildTopology(vpcs, nil, nil, nil, nil, nil, nil, nil)
+	if len(elements.Nodes) != 1 {
+		t.Fatalf("expected 1 node (vpc only), got %d", len(elements.Nodes))
+	}
+	for _, n := range elements.Nodes {
+		if n.Data.ID == "internet" {
+			t.Error("unexpected internet node when no IGW/ALB exists")
+		}
+	}
+
+	// Internet node appears with an attached IGW
+	igws := []ec2types.InternetGateway{{
+		InternetGatewayId: aws.String("igw-1"),
+		Attachments: []ec2types.InternetGatewayAttachment{
+			{State: ec2types.AttachmentStatusAttached, VpcId: aws.String("vpc-1")},
+		},
+	}}
+	elements = buildTopology(vpcs, nil, nil, nil, igws, nil, nil, nil)
+	var internetNode *cy.Node
+	for i := range elements.Nodes {
+		if elements.Nodes[i].Data.ID == "internet" {
+			internetNode = &elements.Nodes[i]
+			break
+		}
+	}
+	if internetNode == nil {
+		t.Fatal("expected internet node with attached IGW")
+	}
+	if internetNode.Data.Attributes["group"] != "internet" {
+		t.Errorf("internet group = %q, want internet", internetNode.Data.Attributes["group"])
+	}
+	foundEgress := false
+	for _, e := range elements.Edges {
+		if e.Data.Source == "igw-1" && e.Data.Target == "internet" && e.Data.Attributes["type"] == "egress" {
+			foundEgress = true
+			break
+		}
+	}
+	if !foundEgress {
+		t.Error("missing IGW→internet egress edge")
+	}
+
+	// Internet node appears with internet-facing ALB (no IGW)
+	subnets := []ec2types.Subnet{
+		{SubnetId: aws.String("subnet-a"), VpcId: aws.String("vpc-1"), CidrBlock: aws.String("10.0.1.0/24"), AvailabilityZone: aws.String("us-east-1a")},
+	}
+	lbs := []elbtypes.LoadBalancer{{
+		LoadBalancerArn:  aws.String("arn:aws:elbv2:...:loadbalancer/app/public-alb/123"),
+		LoadBalancerName: aws.String("public-alb"), Type: elbtypes.LoadBalancerTypeEnumApplication,
+		Scheme: elbtypes.LoadBalancerSchemeEnumInternetFacing, VpcId: aws.String("vpc-1"),
+		AvailabilityZones: []elbtypes.AvailabilityZone{{SubnetId: aws.String("subnet-a")}},
+	}}
+	elements = buildTopology(vpcs, subnets, nil, nil, nil, lbs, nil, nil)
+	internetNode = nil
+	for i := range elements.Nodes {
+		if elements.Nodes[i].Data.ID == "internet" {
+			internetNode = &elements.Nodes[i]
+			break
+		}
+	}
+	if internetNode == nil {
+		t.Fatal("expected internet node with internet-facing ALB")
+	}
+	foundEgress = false
+	for _, e := range elements.Edges {
+		if e.Data.Source == "alb_public-alb" && e.Data.Target == "internet" && e.Data.Attributes["type"] == "egress" {
+			foundEgress = true
+			break
+		}
+	}
+	if !foundEgress {
+		t.Error("missing ALB→internet egress edge")
+	}
+
+	// No internet node for internal ALB
+	internalLB := []elbtypes.LoadBalancer{{
+		LoadBalancerArn:  aws.String("arn:...:loadbalancer/app/internal-alb/456"),
+		LoadBalancerName: aws.String("internal-alb"), Type: elbtypes.LoadBalancerTypeEnumApplication,
+		Scheme: elbtypes.LoadBalancerSchemeEnumInternal, VpcId: aws.String("vpc-1"),
+		AvailabilityZones: []elbtypes.AvailabilityZone{{SubnetId: aws.String("subnet-a")}},
+	}}
+	elements = buildTopology(vpcs, subnets, nil, nil, nil, internalLB, nil, nil)
+	for _, n := range elements.Nodes {
+		if n.Data.ID == "internet" {
+			t.Error("unexpected internet node for internal-only ALB")
+		}
 	}
 }
 
