@@ -41,6 +41,45 @@ export function createGraph(
           padding: '20px',
         },
       },
+      // Group-specific node styles
+      {
+        selector: 'node[group="vpc"]',
+        style: { 'background-color': '#4499a3', shape: 'round-rectangle' },
+      },
+      {
+        selector: 'node[group="subnet"]',
+        style: { 'background-color': '#5a8a4a', shape: 'rectangle' },
+      },
+      {
+        selector: 'node[group="instance"]',
+        style: { 'background-color': '#c2855b', shape: 'ellipse', width: 35, height: 35 },
+      },
+      {
+        selector: 'node[group="elb"]',
+        style: { 'background-color': '#a15b9e', shape: 'diamond' },
+      },
+      {
+        selector: 'node[group="igw"]',
+        style: { 'background-color': '#5b8aa1', shape: 'triangle' },
+      },
+      {
+        selector: 'node[group="security_group"]',
+        style: { 'background-color': '#c25b5b', shape: 'hexagon' },
+      },
+      {
+        selector: 'node[group="internet"]',
+        style: {
+          'background-color': '#3498db',
+          'border-style': 'dashed',
+          'border-width': 3,
+          'border-color': '#5dade2',
+          shape: 'ellipse',
+          width: 60,
+          height: 60,
+          'font-size': '14px',
+          'font-weight': 'bold',
+        },
+      },
       {
         selector: 'edge',
         style: {
