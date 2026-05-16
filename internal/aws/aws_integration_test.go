@@ -84,8 +84,9 @@ func TestIntegration_FlociTopologyDiscovery(t *testing.T) {
 
 // newFlociConfig creates an AWS SDK config targeting the local Floci instance.
 func newFlociConfig(ctx context.Context) (aws.Config, error) {
+	//nolint:staticcheck // Deprecated resolver is still the cleanest way for multi-service endpoint override.
 	resolver := aws.EndpointResolverWithOptionsFunc(
-		func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+		func(_, region string, _ ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
 				PartitionID:   "aws",
 				URL:           flociEndpoint,
@@ -96,6 +97,7 @@ func newFlociConfig(ctx context.Context) (aws.Config, error) {
 
 	return config.LoadDefaultConfig(ctx,
 		config.WithRegion("us-east-1"),
+		//nolint:staticcheck // Coupled to resolver above.
 		config.WithEndpointResolverWithOptions(resolver),
 		config.WithCredentialsProvider(aws.AnonymousCredentials{}),
 	)

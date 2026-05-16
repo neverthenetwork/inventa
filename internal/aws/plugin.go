@@ -42,8 +42,10 @@ func New(cfg *config.Conf, logger *slog.Logger) (*Plugin, error) {
 
 	// Custom endpoint URL (e.g. Floci, LocalStack)
 	if awscfg.EndpointURL != "" {
+		//nolint:staticcheck // EndpointResolverWithOptionsFunc is deprecated but still the cleanest way
+		// to support multiple AWS services with a single custom endpoint URL.
 		resolver := aws.EndpointResolverWithOptionsFunc(
-			func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+			func(_, region string, _ ...interface{}) (aws.Endpoint, error) {
 				return aws.Endpoint{
 					PartitionID:   "aws",
 					URL:           awscfg.EndpointURL,
@@ -51,6 +53,7 @@ func New(cfg *config.Conf, logger *slog.Logger) (*Plugin, error) {
 				}, nil
 			},
 		)
+		//nolint:staticcheck // WithEndpointResolverWithOptions is coupled to the resolver above.
 		loadOpts = append(loadOpts, awsconfig.WithEndpointResolverWithOptions(resolver))
 		// Use anonymous credentials for local emulators
 		loadOpts = append(loadOpts, func(o *awsconfig.LoadOptions) error {
