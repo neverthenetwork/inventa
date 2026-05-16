@@ -94,6 +94,94 @@ export function createGraph(
           color: '#94a3b8',
         },
       },
+      // Edge type differentiation
+      {
+        // Containment: dashed, thin, grey, no arrow
+        selector: 'edge[type="parent"]',
+        style: {
+          'line-style': 'dashed',
+          'line-color': '#64748b',
+          'target-arrow-shape': 'none',
+          width: 1.5,
+          opacity: 0.5,
+          'curve-style': 'haystack',
+        },
+      },
+      {
+        // Security group membership: dotted, thin, red
+        selector: 'edge[type="member"]',
+        style: {
+          'line-style': 'dotted',
+          'line-color': '#f87171',
+          'target-arrow-shape': 'none',
+          width: 1.5,
+          opacity: 0.6,
+          'curve-style': 'haystack',
+        },
+      },
+      {
+        // Attached relationships: thin solid teal
+        selector: 'edge[type="attached"]',
+        style: {
+          'line-color': '#2dd4bf',
+          'target-arrow-shape': 'triangle',
+          'target-arrow-color': '#2dd4bf',
+          width: 1.5,
+          opacity: 0.7,
+          'curve-style': 'haystack',
+        },
+      },
+      {
+        // Traffic/egress: thick, directional arrow, cyan-blue
+        selector: 'edge[type="egress"]',
+        style: {
+          'line-color': '#38bdf8',
+          'target-arrow-color': '#38bdf8',
+          'target-arrow-shape': 'triangle',
+          width: 3,
+          opacity: 0.9,
+        },
+      },
+      {
+        // LB → instance targets: medium teal
+        selector: 'edge[type="target"]',
+        style: {
+          'line-color': '#34d399',
+          'target-arrow-color': '#34d399',
+          'target-arrow-shape': 'triangle',
+          width: 2,
+          opacity: 0.8,
+        },
+      },
+      {
+        // LB → subnet attachment: thin purple
+        selector: 'edge[type="lb-subnet"]',
+        style: {
+          'line-color': '#a78bfa',
+          'target-arrow-shape': 'diamond',
+          'target-arrow-color': '#a78bfa',
+          width: 1.5,
+          opacity: 0.65,
+          'curve-style': 'haystack',
+        },
+      },
+      // Compound (parent) node styling
+      {
+        selector: '$node > node',
+        style: {
+          'background-opacity': 0.08,
+          'overlay-opacity': 0.02,
+          'padding': '40px',
+          'border-width': 1.5,
+          'border-color': '#475569',
+          'font-size': '13px',
+          'font-weight': 'bold',
+          'text-valign': 'top',
+          'text-halign': 'center',
+          'text-margin-y': 10,
+          'background-color': '#1e293b',
+        },
+      },
     ],
 
     elements,

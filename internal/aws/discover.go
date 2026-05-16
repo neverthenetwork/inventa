@@ -289,6 +289,7 @@ func buildTopology(
 				"label":   fmt.Sprintf("%s (%s, %s)", name, cidr, az),
 				"group":   "subnet",
 				"cluster": clusterIdx,
+				"parent":  vpcID,
 				"cidr":    cidr,
 				"vpcId":   vpcID,
 				"az":      az,
@@ -315,17 +316,19 @@ func buildTopology(
 		privIP := safeString(inst.PrivateIpAddress)
 		pubIP := safeString(inst.PublicIpAddress)
 		subnetID := instanceSubnet[id]
-		clusterIdx := vpcIndex[subnetVPC[subnetID]]
+		vpcID := subnetVPC[subnetID]
+		clusterIdx := vpcIndex[vpcID]
 		elements.Nodes = append(elements.Nodes, cy.Node{
 			Data: cy.NodeData{ID: id, Attributes: map[string]any{
 				"label":        fmt.Sprintf("%s (%s)", name, privIP),
 				"group":        "instance",
 				"cluster":      clusterIdx,
+				"parent":       vpcID,
 				"instanceType": instType,
 				"privateIp":    privIP,
 				"publicIp":     pubIP,
 				"subnetId":     subnetID,
-				"vpcId":        subnetVPC[subnetID],
+				"vpcId":        vpcID,
 				"state":        string(inst.State.Name),
 			}},
 			Selectable: true,
@@ -367,14 +370,19 @@ func buildTopology(
 		name := aws.ToString(sg.GroupName)
 		vpcID := aws.ToString(sg.VpcId)
 		clusterIdx := vpcIndex[vpcID]
+		ingressCount := len(sg.IpPermissions)
+		egressCount := len(sg.IpPermissionsEgress)
 		elements.Nodes = append(elements.Nodes, cy.Node{
 			Data: cy.NodeData{ID: id, Attributes: map[string]any{
-				"label":       fmt.Sprintf("SG: %s", name),
-				"group":       "security_group",
-				"cluster":     clusterIdx,
-				"groupName":   name,
-				"description": aws.ToString(sg.Description),
-				"vpcId":       vpcID,
+				"label":         fmt.Sprintf("SG: %s", name),
+				"group":         "security_group",
+				"cluster":       clusterIdx,
+				"parent":        vpcID,
+				"groupName":     name,
+				"description":   aws.ToString(sg.Description),
+				"vpcId":         vpcID,
+				"ingressRules":  ingressCount,
+				"egressRules":   egressCount,
 			}},
 			Selectable: true,
 		})
@@ -407,6 +415,7 @@ func buildTopology(
 				"label":   fmt.Sprintf("IGW: %s", shortID(name, id)),
 				"group":   "igw",
 				"cluster": clusterIdx,
+				"parent":  vpcID,
 				"vpcId":   vpcID,
 			}},
 			Selectable: true,
@@ -463,6 +472,7 @@ func buildTopology(
 				"label":   fmt.Sprintf("ALB: %s (%s)", name, scheme),
 				"group":   "elb",
 				"cluster": clusterIdx,
+				"parent":  vpcID,
 				"dns":     dns,
 				"type":    string(lb.Type),
 				"scheme":  scheme,

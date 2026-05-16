@@ -14,6 +14,7 @@ import {
 } from './loading-states';
 import { createComboBox } from './searchable-select';
 import { createDetailsPanel } from './details-panel';
+import { createLegend } from './legend';
 
 let cy: ReturnType<typeof createGraph> | null = null;
 let srcBox: ReturnType<typeof createComboBox> | null = null;
@@ -173,6 +174,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const detailsArea = document.getElementById('details_area');
     if (detailsArea) {
       detailsPanel = createDetailsPanel(detailsArea);
+    }
+  }
+
+  // Create legend
+  {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      createLegend(sidebar);
     }
   }
 

@@ -7,16 +7,20 @@ export interface NodeData {
   label: string;
   group?: string;
   cluster?: number;
+  parent?: string;
   show?: boolean;
+  [key: string]: unknown;
 }
 
 export interface EdgeData {
   id: string;
   source: string;
   target: string;
+  type?: string;
   igp_metric?: string;
   adjacency_sid?: string;
   show?: boolean;
+  [key: string]: unknown;
 }
 
 export interface Node {
