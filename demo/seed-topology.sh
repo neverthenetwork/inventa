@@ -17,6 +17,27 @@ set -eu
 
 AWS="aws --endpoint-url http://floci:4566 --region us-east-1"
 
+echo "=== Cleaning up Floci default resources ==="
+echo "[cleanup] Removing default VPC..."
+
+# Detach and delete default IGW
+$AWS ec2 detach-internet-gateway --internet-gateway-id igw-default --vpc-id vpc-default 2>/dev/null || true
+$AWS ec2 delete-internet-gateway --internet-gateway-id igw-default 2>/dev/null || true
+
+# Delete default subnets
+for sid in subnet-default-a subnet-default-b subnet-default-c; do
+  $AWS ec2 delete-subnet --subnet-id $sid 2>/dev/null || true
+done
+
+# Delete default SG
+$AWS ec2 delete-security-group --group-id sg-default 2>/dev/null || true
+
+# Delete default VPC (last, no cascade in Floci)
+$AWS ec2 delete-vpc --vpc-id vpc-default 2>/dev/null || true
+
+echo "  Default resources removed"
+echo ""
+
 echo "=== Seeding demo topology ==="
 
 # ── VPC ──
