@@ -53,6 +53,9 @@ func TestBuildTopology_SingleVpcWithSubnet(t *testing.T) {
 	if subnetNode.Data.Attributes["group"] != "subnet" {
 		t.Errorf("subnet group = %q, want subnet", subnetNode.Data.Attributes["group"])
 	}
+	if subnetNode.Data.Attributes["parent"] != "vpc-abc123" {
+		t.Errorf("subnet parent = %q, want vpc-abc123", subnetNode.Data.Attributes["parent"])
+	}
 
 	edge := elements.Edges[0]
 	if edge.Data.Source != "subnet-abc" || edge.Data.Target != "vpc-abc123" {
@@ -97,8 +100,21 @@ func TestBuildTopology_InstanceWithSG(t *testing.T) {
 	if instNode.Data.Attributes["group"] != "instance" {
 		t.Errorf("instance group = %q, want instance", instNode.Data.Attributes["group"])
 	}
+	if instNode.Data.Attributes["parent"] != "vpc-1" {
+		t.Errorf("instance parent = %q, want vpc-1", instNode.Data.Attributes["parent"])
+	}
 	if sgNode == nil {
 		t.Fatal("missing SG node sg-web")
+	}
+	if sgNode.Data.Attributes["parent"] != "vpc-1" {
+		t.Errorf("SG parent = %q, want vpc-1", sgNode.Data.Attributes["parent"])
+	}
+	// SG rule counts
+	if ing, ok := sgNode.Data.Attributes["ingressRules"].(int); !ok || ing != 0 {
+		t.Errorf("SG ingressRules = %v, want 0", sgNode.Data.Attributes["ingressRules"])
+	}
+	if egr, ok := sgNode.Data.Attributes["egressRules"].(int); !ok || egr != 0 {
+		t.Errorf("SG egressRules = %v, want 0", sgNode.Data.Attributes["egressRules"])
 	}
 
 	found := false
@@ -143,6 +159,9 @@ func TestBuildTopology_InternetGateway(t *testing.T) {
 	}
 	if igwNode.Data.Attributes["group"] != "igw" {
 		t.Errorf("IGW group = %q, want igw", igwNode.Data.Attributes["group"])
+	}
+	if igwNode.Data.Attributes["parent"] != "vpc-1" {
+		t.Errorf("IGW parent = %q, want vpc-1", igwNode.Data.Attributes["parent"])
 	}
 	if internetNode == nil {
 		t.Fatal("missing internet node")
@@ -202,6 +221,9 @@ func TestBuildTopology_LoadBalancerWithTargets(t *testing.T) {
 	}
 	if albNode == nil {
 		t.Fatal("missing ALB node")
+	}
+	if albNode.Data.Attributes["parent"] != "vpc-1" {
+		t.Errorf("ALB parent = %q, want vpc-1", albNode.Data.Attributes["parent"])
 	}
 	if internetNode == nil {
 		t.Fatal("missing internet node for internet-facing ALB")
