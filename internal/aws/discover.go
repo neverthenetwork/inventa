@@ -374,15 +374,15 @@ func buildTopology(
 		egressCount := len(sg.IpPermissionsEgress)
 		elements.Nodes = append(elements.Nodes, cy.Node{
 			Data: cy.NodeData{ID: id, Attributes: map[string]any{
-				"label":         fmt.Sprintf("SG: %s", name),
-				"group":         "security_group",
-				"cluster":       clusterIdx,
-				"parent":        vpcID,
-				"groupName":     name,
-				"description":   aws.ToString(sg.Description),
-				"vpcId":         vpcID,
-				"ingressRules":  ingressCount,
-				"egressRules":   egressCount,
+				"label":        fmt.Sprintf("SG: %s", name),
+				"group":        "security_group",
+				"cluster":      clusterIdx,
+				"parent":       vpcID,
+				"groupName":    name,
+				"description":  aws.ToString(sg.Description),
+				"vpcId":        vpcID,
+				"ingressRules": ingressCount,
+				"egressRules":  egressCount,
 			}},
 			Selectable: true,
 		})
