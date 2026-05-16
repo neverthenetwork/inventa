@@ -4,9 +4,9 @@
 #   docker compose up --build
 #   open http://localhost:8081
 #
-# Floci seeds a default VPC with subnets, internet gateway, and
-# security group automatically. Inventa discovers it and shows
-# the topology in the browser.
+# Floci auto-seeds a default VPC on startup. The seed service then
+# creates a richer topology (EC2 instances, ALB, target group).
+# Inventa discovers everything and renders the graph in the browser.
 
 services:
   # Local AWS emulator — seeds default VPC resources on startup
@@ -24,6 +24,17 @@ services:
       retries: 10
       start_period: 1s
 
+  # Seed demo topology — creates EC2 instances, ALB, etc. in Floci
+  # Runs once, then exits. Inventa waits for it to complete.
+  seed:
+    image: floci/floci:latest-compat
+    depends_on:
+      floci:
+        condition: service_healthy
+    volumes:
+      - ./demo/seed-topology.sh:/seed-topology.sh:ro
+    entrypoint: ["/bin/sh", "/seed-topology.sh"]
+
   # Inventa — discovers AWS topology from Floci and serves the web UI
   inventa:
     build: .
@@ -34,3 +45,5 @@ services:
     depends_on:
       floci:
         condition: service_healthy
+      seed:
+        condition: service_completed_successfully
