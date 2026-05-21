@@ -1,0 +1,11 @@
+# ── Inventa Demo Config (Neo4j source) ──────────────────────────
+# Cartography discovers AWS topology → writes to Neo4j → inventa reads it
+# Start with: docker compose up --build (from the demo/ directory)
+
+sources:
+  neo4j:
+    enabled: true
+    uri: "bolt://neo4j:7687"
+    database: "neo4j"
+
+http_listen_port: 8081

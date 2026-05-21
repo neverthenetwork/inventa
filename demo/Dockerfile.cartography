@@ -1,0 +1,16 @@
+FROM python:3.13-slim
+
+# Install cartography and patch the MacAddress crash for Floci compatibility
+RUN pip install --no-cache-dir cartography==0.136.0
+
+# Patch: Floci network interfaces lack MacAddress — use .get() to avoid KeyError
+RUN find /usr/local/lib -path "*/cartography/intel/aws/ec2/instances.py" -exec sed -i \
+    -e 's/network_interface\["Status"\]/network_interface.get("Status", "available")/g' \
+    -e 's/network_interface\["MacAddress"\]/network_interface.get("MacAddress", "")/g' \
+    -e 's/network_interface\["Description"\]/network_interface.get("Description", "")/g' \
+    {} \;
+
+COPY cartography-run.sh /usr/local/bin/cartography-run.sh
+RUN chmod +x /usr/local/bin/cartography-run.sh
+
+ENTRYPOINT ["/usr/local/bin/cartography-run.sh"]
