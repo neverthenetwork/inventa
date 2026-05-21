@@ -1,0 +1,76 @@
+# ═══════════════════════════════════════════════════════════════════
+# Inventa Demo Stack: Cartography → Neo4j → inventa
+#
+# Single command: docker compose up --build
+# Then open:      http://localhost:8081
+#
+# Architecture:
+#   Floci (fake AWS) → Cartography (discovery) → Neo4j (graph DB) → inventa (3D/VR UI)
+# ═══════════════════════════════════════════════════════════════════
+
+services:
+  # ── AWS Emulator ──────────────────────────────────────────────
+  floci:
+    image: floci/floci:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - FLOCI_DEFAULT_REGION=us-east-1
+      - FLOCI_SERVICES_EC2_MOCK=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:4566/"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 1s
+
+  # ── Topology Seed (one-shot) ──────────────────────────────────
+  seed:
+    image: floci/floci:latest-compat
+    depends_on:
+      floci:
+        condition: service_healthy
+    volumes:
+      - ./seed-topology.sh:/seed-topology.sh:ro
+    entrypoint: ["/bin/sh", "/seed-topology.sh"]
+
+  # ── Neo4j Graph Database ──────────────────────────────────────
+  neo4j:
+    image: neo4j:5-community
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=none
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:7474/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  # ── Cartography Discovery (one-shot) ───────────────────────────
+  cartography:
+    build:
+      context: .
+      dockerfile: Dockerfile.cartography
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+      neo4j:
+        condition: service_healthy
+
+  # ── Inventa Visualization UI ──────────────────────────────────
+  inventa:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./inventa-config.yaml:/etc/inventa/config.yaml:ro
+    depends_on:
+      cartography:
+        condition: service_completed_successfully
