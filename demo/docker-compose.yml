@@ -45,9 +45,9 @@ services:
     environment:
       - NEO4J_AUTH=none
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:7474/"]
+      test: ["CMD", "neo4j-admin", "server", "status"]
       interval: 5s
-      timeout: 3s
+      timeout: 5s
       retries: 10
       start_period: 10s
 
