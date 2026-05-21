@@ -56,6 +56,7 @@ func (p *Plugin) Start(ctx context.Context, store *datastore.TopologyStore) erro
 		if closeErr := driver.Close(ctx); closeErr != nil {
 			p.logger.Warn("error closing neo4j driver", "error", closeErr)
 		}
+		p.driver = nil
 	}()
 
 	// Verify connectivity.
@@ -79,7 +80,9 @@ func (p *Plugin) Stop() error {
 	// Use a short background context for cleanup.
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	return p.driver.Close(ctx)
+	err := p.driver.Close(ctx)
+	p.driver = nil
+	return err
 }
 
 // syncOnce performs a single sync and returns.
@@ -127,6 +130,7 @@ func (p *Plugin) sync(ctx context.Context, store *datastore.TopologyStore) error
 		query,
 		nil,
 		neo4j.EagerResultTransformer,
+		neo4j.ExecuteQueryWithDatabase(p.cfg.Database),
 	)
 	if err != nil {
 		return fmt.Errorf("executing cypher query: %w", err)
