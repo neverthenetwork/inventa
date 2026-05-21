@@ -39,11 +39,23 @@ type AWSSourceConfig struct {
 	PollInterval int      `yaml:"poll_interval_seconds" default:"300"`
 }
 
+// Neo4jSourceConfig holds Neo4j graph database topology source configuration.
+type Neo4jSourceConfig struct {
+	SourceConfig        `yaml:",inline"`
+	URI                 string `yaml:"uri"`                   // bolt://localhost:7687
+	Username            string `yaml:"username"`              // "" for auth-none
+	Password            string `yaml:"password"`              // "" for auth-none
+	Database            string `yaml:"database"`              // "neo4j" default
+	Query               string `yaml:"query"`                 // Custom Cypher query (optional)
+	PollIntervalSeconds int    `yaml:"poll_interval_seconds"` // 0 = one-shot
+}
+
 // Sources holds per-source configuration.
 type Sources struct {
 	BGPLS     BGPSourceConfig       `yaml:"bgpls"`
 	LocalJSON LocalJSONSourceConfig `yaml:"localjson"`
 	AWS       AWSSourceConfig       `yaml:"aws"`
+	Neo4j     Neo4jSourceConfig     `yaml:"neo4j"`
 }
 
 // Conf holds configuration information.

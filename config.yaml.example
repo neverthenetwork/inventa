@@ -37,6 +37,20 @@ sources:
     # endpoint_url: "http://localhost:4566"  # Optional: local emulator
     poll_interval_seconds: 300       # How often to refresh topology
 
+  # ── Neo4j: Load topology from a Neo4j graph database ──
+  # Point at a Neo4j instance populated by Cartography or any graph
+  # data pipeline. The default query fetches AWS infrastructure nodes
+  # and relationships. Set a custom query to target other domains.
+  # Auth: omit username+password for auth-none (local dev / Docker).
+  neo4j:
+    enabled: false
+    uri: "bolt://localhost:7687"
+    # username: "neo4j"
+    # password: "password"
+    database: "neo4j"
+    # query: "MATCH (n)-[r]-(m) RETURN n, r, m LIMIT 1000"
+    poll_interval_seconds: 0         # 0 = one-shot sync
+
 # ── Web Server ─────────────────────────────────────────────────
 
 http_listen_port: 8081

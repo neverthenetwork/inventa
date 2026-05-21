@@ -19,6 +19,7 @@ import (
 	"github.com/neverthenetwork/inventa/internal/discovery"
 	"github.com/neverthenetwork/inventa/internal/localjson"
 	"github.com/neverthenetwork/inventa/internal/logging"
+	"github.com/neverthenetwork/inventa/internal/neo4j"
 	"github.com/neverthenetwork/inventa/internal/web"
 )
 
@@ -130,6 +131,7 @@ func buildPlugins(cfg *config.Conf, logger *slog.Logger) []discovery.Plugin {
 	jsonEnabled := cfg.Sources.LocalJSON.Enabled || (cfg.Sources.LocalJSON.File == "" &&
 		cfg.LocalJSONFile != "")
 	awsEnabled := cfg.Sources.AWS.Enabled
+	neo4jEnabled := cfg.Sources.Neo4j.Enabled
 
 	if bgplsEnabled {
 		plugins = append(plugins, bgpls.New(cfg, logger))
@@ -143,6 +145,14 @@ func buildPlugins(cfg *config.Conf, logger *slog.Logger) []discovery.Plugin {
 			logger.Error("failed to create AWS plugin", "error", err)
 		} else {
 			plugins = append(plugins, awsPlugin)
+		}
+	}
+	if neo4jEnabled {
+		neo4jPlugin, err := neo4j.New(&cfg.Sources.Neo4j, logger)
+		if err != nil {
+			logger.Error("failed to create Neo4j plugin", "error", err)
+		} else {
+			plugins = append(plugins, neo4jPlugin)
 		}
 	}
 
