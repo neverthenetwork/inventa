@@ -18,6 +18,9 @@
     "cytoscape": "^3.30.0",
     "cytoscape-cise": "^2.0.0"
   },
+  "overrides": {
+    "got": "11.8.5"
+  },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
     "@types/cytoscape": "^3.21.0",
