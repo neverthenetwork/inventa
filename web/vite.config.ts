@@ -4,6 +4,7 @@ import { resolve } from 'path';
 export default defineConfig({
   root: '.',
   build: {
+    target: 'es2021',
     outDir: '../cmd/inventa/web-dist',
     rollupOptions: {
       input: {
